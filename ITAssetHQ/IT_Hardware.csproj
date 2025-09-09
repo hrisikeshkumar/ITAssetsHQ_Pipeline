@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="IT_Hardware.Tests\**" />
+    <Compile Remove="Reports\**" />
     <Content Remove="IT_Hardware.Tests\**" />
+    <Content Remove="Reports\**" />
     <EmbeddedResource Remove="IT_Hardware.Tests\**" />
+    <EmbeddedResource Remove="Reports\**" />
     <None Remove="IT_Hardware.Tests\**" />
+    <None Remove="Reports\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Reports\" />
     <Folder Include="wwwroot\Files\HQ\ItemIssue\" />
     <Folder Include="wwwroot\Files\HQ\PO\" />
     <Folder Include="wwwroot\Files\FinalApproval\" />
