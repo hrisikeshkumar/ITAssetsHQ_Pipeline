@@ -1,0 +1,150 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool: Laptop
+
+variables:
+  buildConfiguration: 'Release'
+  projectSolution: '**/IT_Hardware.sln'
+  publishDir: '$(Build.ArtifactStagingDirectory)/publish'
+
+stages:
+# ------------------------------
+# 1. Build & Test + SonarCloud
+# ------------------------------
+- stage: BuildAndTest
+  displayName: "Build, Test & SonarCloud"
+  jobs:
+  - job: Build
+    steps:
+      - checkout: self
+
+      # Install .NET 9 Preview SDK
+      - task: UseDotNet@2
+        displayName: "Use .NET 9.0.x SDK"
+        inputs:
+          packageType: 'sdk'
+          version: '9.0.x'
+          installationPath: $(Agent.ToolsDirectory)/dotnet
+
+      - script: |
+          echo "##vso[task.setvariable variable=DOTNET_ROOT]$(Agent.ToolsDirectory)/dotnet"
+          echo "##vso[task.setvariable variable=PATH]$(Agent.ToolsDirectory)/dotnet;$(PATH)"
+        displayName: "Set DOTNET_ROOT"
+
+      - script: dotnet --info
+        displayName: "Check .NET SDK Version"
+
+      # Restore using dotnet (not NuGet)
+      - task: DotNetCoreCLI@2
+        displayName: "Restore"
+        inputs:
+          command: 'restore'
+          projects: '$(projectSolution)'
+
+      # SonarCloud Prepare
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarAzure'
+          organization: 'hrisikeshkumar'
+          scannerMode: 'MSBuild'
+          projectKey: 'hrisikeshkumar_azuredevops'
+          projectName: 'AzureDevops'
+
+      # Build
+      - task: DotNetCoreCLI@2
+        displayName: "Build"
+        inputs:
+          command: 'build'
+          projects: '$(projectSolution)'
+          arguments: '--configuration $(buildConfiguration)'
+
+# Test (run unit tests & generate .trx report)
+      - task: DotNetCoreCLI@2
+        displayName: "Run Unit Tests"
+        inputs:
+          command: 'test'
+          projects: '**/*Tests.csproj'
+          arguments: '--configuration $(buildConfiguration) --no-build --logger trx --results-directory $(Build.SourcesDirectory)/TestResults'
+
+      # Publish Test Results to Azure DevOps
+      - task: PublishTestResults@2
+        displayName: "Publish Unit Test Results"
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: 'VSTest'
+          testResultsFiles: '**/TestResults/*.trx'
+          searchFolder: '$(Build.SourcesDirectory)'
+          failTaskOnFailedTests: true
+
+      - task: SonarCloudAnalyze@1
+      - task: SonarCloudPublish@1
+        inputs:
+          pollingTimeoutSec: '300'
+
+# ------------------------------
+# 2. Package & Publish Artifacts
+# ------------------------------
+- stage: Package
+  displayName: "Package & Publish"
+  dependsOn: BuildAndTest
+  jobs:
+  - job: PackageJob
+    steps:
+      - checkout: self
+        clean: true
+
+      - task: UseDotNet@2
+        displayName: "Use .NET 9.0.x SDK"
+        inputs:
+          packageType: 'sdk'
+          version: '9.0.x'
+          installationPath: $(Agent.ToolsDirectory)/dotnet
+
+      - script: |
+          echo "##vso[task.setvariable variable=DOTNET_ROOT]$(Agent.ToolsDirectory)/dotnet"
+          echo "##vso[task.setvariable variable=PATH]$(Agent.ToolsDirectory)/dotnet;$(PATH)"
+        displayName: "Set DOTNET_ROOT"
+
+      - script: dotnet --info
+        displayName: "Check .NET SDK Version"
+
+      - task: DotNetCoreCLI@2
+        displayName: "Publish"
+        inputs:
+          command: 'publish'
+          projects: '$(projectSolution)'
+          arguments: '--configuration $(buildConfiguration) --output $(publishDir)'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Artifacts"
+        inputs:
+          pathToPublish: '$(publishDir)'
+          artifactName: 'drop'
+          publishLocation: 'Container'          
+# ------------------------------
+# 3. Deploy to Azure (staging)
+# ------------------------------
+- stage: Deploy
+  displayName: "Deploy to Azure App Service"
+  dependsOn: Package
+  jobs:
+  - deployment: DeployWeb
+    environment: 'staging'   # 👈 FIXED (completed string)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                artifactName: 'drop'
+                downloadPath: '$(Pipeline.Workspace)'
+
+            - task: AzureWebApp@1
+              displayName: 'Deploy to Azure WebApp (Staging)'
+              inputs:
+                azureSubscription: 'Azure_RG'
+                appName: 'rajaicsi'
+                package: '$(Pipeline.Workspace)/drop'
