@@ -1,0 +1,159 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Budget
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Edit Budget Head</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Update_Budget_Head", "Budget_Head", FormMethod.Post))
+    {
+
+
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Budget Head Name
+                    @Html.HiddenFor(x => x.Budget_Head_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:75%;" colspan="3">
+
+                    @Html.TextBoxFor(x => x.Budget_Name, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+
+            </tr>
+
+            <tr>
+                <td style="width:25%;">
+                    Total Budget Amount
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Total_Budget_Amount, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+
+                <td style="width:25%; text-align:center">
+                    Budget Year
+                </td>
+                <td style="width:25%;">
+
+                    @Html.DropDownListFor(x => x.Budget_Year , Model.Bud_year_List,  new { @class = " form-rounded", @style = " width :90%; " })
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Budget Head Type
+                    @Html.HiddenFor(x => x.Budget_Head_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:75%;" colspan="3">
+
+                    @Html.DropDownListFor(x => x.Budget_HeadType , new List<SelectListItem>{
+                    
+                        new SelectListItem("Please Select Budget Type", "-1"),
+                        new SelectListItem("Revenue", "0"),
+                        new SelectListItem("Capital", "1")
+                    
+                    }  ,  new { @class = " form-rounded", @style = " width :90%; " })
+
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Budget_Head_Details", "Budget_Head", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+
+    }
+</div>
+
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+
+        alert("@TempData["Message"]");
+
+    };
+    </script>
+
+}
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#Item_Make_id').change(function () {
+            $('#Item_Model_id').empty();
+
+            $.ajax({
+                type: "POST",
+                url:  "@Url.Action("Model_List", "Printer")",
+                datatype: "Json",
+                data: { Item_Make: $('#Item_Make_id').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Item_Model_id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+</script>
+
+
+
+
+
+
+

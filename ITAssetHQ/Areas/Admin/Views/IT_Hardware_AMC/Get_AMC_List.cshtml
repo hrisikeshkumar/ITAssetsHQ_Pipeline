@@ -1,0 +1,126 @@
+﻿@model List<IT_Hardware.Areas.Admin.Models.mod_AMC_Warranty_List>
+
+@{
+    ViewBag.Title = "Find_Warranty_Expired";
+}
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td style="text-align:left; width:25%;">
+                <a href="@Url.Action("Amc_DashBoard", null, new { area = string.Empty, controller = "IT_Hardware_AMC"  , Types =""   })">
+                    Back
+                </a>
+            </td>
+            <td style="text-align: center; width: 50%;">
+
+                <h4>@ViewBag.Assettype under AMC</h4>
+
+            </td>
+            <td style="text-align: right; width: 25%;">
+                <a href="@Url.Action("Update_Bulk_Amc", null, new { area = string.Empty, controller = "IT_Hardware_AMC"  , Types =ViewBag.Assettype   })">
+                    Update AMC of Bulk Items
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="height:20px;">
+            </td>
+        </tr>
+        <tr>
+
+            <td colspan="3">
+                <table style="width:100%">
+
+                    <tr>
+                        <th>
+                            Employee Name
+                        </th>
+                        <th>
+                            Designation
+                        </th>
+                        <th>
+                            Serial Number
+                        </th>
+                        <th>
+                            Vendor Name
+                        </th>
+                        <th>
+                            Amc End Date
+                        </th>
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Emp_Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Designation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Item_SlNo)
+                                @Html.HiddenFor(modelItem => item.Item_Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Vendor_name)
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AMC_End_Dt, "{0:dd/MM/yyyy}")
+                            </td>
+                            <td>
+
+                                <a href="@Url.Action("Remove_From_AMC", null, new { area = string.Empty, controller = "IT_Hardware_AMC",
+                                             Types = @ViewBag.Assettype, Item_Id = item.Item_Id})"
+                                   onclick="return confirm('Are you sure you remove this asset from AMC?');">
+                                    Remove From AMC
+                                </a>
+
+                             
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+</div>
+
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+}
+
+<!-----------------------------------Modal PopUp------------------------------------------------------->
+

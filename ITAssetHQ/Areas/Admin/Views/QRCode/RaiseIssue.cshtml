@@ -1,0 +1,119 @@
+﻿@using IT_Hardware.Controllers
+@model IT_Hardware.Areas.Admin.Models.RaiseIssue_Mod
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet"/>
+
+<div style="text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <p style="font-size:large; font-weight:bold;">Asset Service </p>
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    @using (Html.BeginForm(ViewBag.ActionName as string, "QRCode", FormMethod.Post))
+    {
+
+        <table id="tblForm" class=" table-hover table-striped shadow " style="width:100%">
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Asset Type -- Serial No @Html.HiddenFor(x => x.AssetId)  @Html.HiddenFor(x => x.Item_Issue_Id)
+                </td>
+                <td style="width:75%;" colspan="3">
+                      @Html.DisplayFor(x => x.AssetType_SerialNo)
+                </td>               
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                     Make -- Model
+                </td>
+                <td style="width:75%;" colspan="3">
+                       @Html.DisplayFor(x => x.Make_Model)
+                </td>               
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    User Information
+                </td>
+                <td style="width:75%;" colspan="3">
+                       @Html.DisplayFor(x => x.Employee_Name_Desig_Dept)
+                </td>               
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Issue Date
+                </td>
+                <td style="width:25%; " >                   
+                      @Html.TextBoxFor(x => x.Issue_Create_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :100%; " })
+                </td>
+                <td style="width:50%; " colspan="2" >
+                      
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Problem Description
+                </td>
+                <td style="width:75%; " colspan="3" >
+                    @Html.TextAreaFor(x => x.IssueInfo, new { @rows="4" ,@style = " width :90%; " })
+                </td>
+            </tr>
+            
+
+            @if(ViewBag.ActionName !="RaiseIssue_Insert")
+            {
+                 <tr>
+                    <td style="width:25%; height:50px;">
+                        Resolution Date
+                    </td>
+                    <td style="width:25%;">                           
+                           @Html.TextBoxFor(x => x.Issue_Resolve_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :100%; " })
+                    </td> 
+                    <td colspan="2" style="width:50%; text-align: center; ">  
+                        Resolved :  <input type="checkbox" name="Resolved" value=true />
+
+                        @* <input id="@fruit.Value" type="checkbox" name="Fruit" value="@fruit.Value" checked="@Model.Resolved.Selected"/> *@
+                    </td>                 
+                </tr>
+                <tr>
+                    <td style="width:25%; height:50px;">
+                        Resolution Details  
+                    </td>
+                    <td style="width:75%;" colspan="3">
+                          @Html.TextAreaFor(x => x.Resolution_Detail, new {  @style = " width :90%; " })
+                    </td>               
+                </tr>
+                <tr>
+                    <td style="width:25%; height:50px;">
+                        Remarks  
+                    </td>
+                    <td style="width:75%;" colspan="3">
+                          @Html.TextAreaFor(x => x.Remarks, new {  @style = " width :90%; " })
+                    </td>               
+                </tr>
+                
+            }
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td style="width:25%; height:10px;" >
+                </td>
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+                </td>
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center" >
+                    @Html.ActionLink("Back", "Asset_Info_Histroy", "QRCode", new { id = Model.AssetId }, new { @class = "button_cls form-rounded", })
+                </td>
+                <td style="width:25%; height:10px;" >
+                </td>
+            </tr>
+        </table>
+    }
+</div>

@@ -1,0 +1,376 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Item_Issue
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Issue Item</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Item_Issue_Create_Post", "Item_Issue", FormMethod.Post, new { @id = "submitForm", enctype = "multipart/form-data" }))
+    {
+
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:25%;">
+                    Asset Serial Number
+                </td>
+                <td style="width:50%;" colspan="2">
+                    @Html.TextBoxFor(x => x.Item_SerialNo, new { @class = " form-rounded", @style = " width :90%; border: 1px solid #0000FF; " })
+                    <i id="Icon_Item_SerialNo" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+                <td style="width:25%; height:50px;">
+                    @Html.HiddenFor(x => x.Item_Id, new { @class = " form-rounded", @style = " width :90%; border: 1px solid #0000FF; " })
+                </td>
+
+            </tr>
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Asset Type
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Item_Name, new { @class = " form-rounded", @readonly = "true", @style = " width :90%;  background-color: #e4f0f0; " })
+                </td>
+
+                <td style="width: 25%; height: 50px;">
+                    Transfer Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Issued_date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :90%; border: 1px solid #0000FF; " })
+                    <i id="Icon_Issued_date" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td style="width:25%; font-weight:bold">Presently Issued</td>
+                <td style="width:75%;" colspan="3">
+                    @Html.HiddenFor(x => x.Previous_Custady_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Employee Name
+
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Previous_Emp_Name, new { @class = " form-rounded", @readonly = "true", @style = " width :90%;  background-color: #e4f0f0;" })
+                </td>
+
+                <td style="width:25%;">
+                    Employee Designation
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Previous_Emp_Designation, new { @class = " form-rounded", @readonly = "true", @style = " width :90%; background-color: #e4f0f0;" })
+                </td>
+
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Employee Department
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Previous_Emp_Dept, new { @class = " form-rounded", @readonly = "true", @style = " width :90%;  background-color: #e4f0f0;" })
+                </td>
+
+                <td style="width:25%;">
+                    Employee Location
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Previous_Emp_Location, new { @class = "dateclass form-rounded date-format", @readonly = "true", @style = " width :90%;  background-color: #e4f0f0;" })
+                </td>
+
+            </tr>
+
+            <tr>
+                <td style="width:25%; font-weight:bold">Item Transfer To</td>
+                <td style="width:75%;" colspan="3">
+                    @Html.HiddenFor(x => x.Transfered_Custady_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width: 25%; height: 50px;">
+                    Employee Name
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Transfered_Emp_Name, new { @class = " form-rounded", @style = " width :90%; border: 1px solid #0000FF;" })
+                    <i id="Icon_Transfered_Emp_Name" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+
+                <td style="width:25%;">
+                    Employee Designation
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Transfered_Emp_Designation, new { @class = " form-rounded", @readonly = "true", @style = " width :90%;  background-color: #e4f0f0;" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%; height: 50px;">
+                    Employee Department
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Transfered_Emp_Dept, new { @class = " form-rounded", @readonly = "true", @style = " width :90%;  background-color: #e4f0f0;" })
+                </td>
+
+                <td style="width:25%;">
+                    Employee Location
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Transfered_Emp_Location, new { @class = " form-rounded", @readonly = "true", @style = " width :90%; background-color: #e4f0f0;" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%; height: 50px;">
+                    Upload Hand Over File
+                </td>
+                <td style="width:75%;" colspan="3">
+                    <input id="Issue_File" type="file"
+                           name="Issue_File" />  Only PDF file is accepted.
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :95%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded" id="btn_submit">Submit</button>
+
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Item_Issue_Details", "Item_Issue", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $('#Item_SerialNo').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "@Url.Action("AutoComplete", "Item_Issue")",
+                data: {SL_No: request.term},
+                dataType: "json",
+                type: "POST",
+                // contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item.item_SL_Number + ' -- ' + item.item_Type + '--' + item.item_Id;
+                       
+                    }))
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    console.log('some error occured', textStatus, errorThrown);
+                }
+            });
+        },
+        minLength: 1,
+        select: function (event, ui) {
+            //alert('you have selected ' + ui.item.label);
+
+            $('#Item_SerialNo').val(ui.item.label.split('--')[0]);
+            $('#Item_Name').val(ui.item.value.split('--')[1]);
+            $('#Item_Id').val(ui.item.value.split('--')[2]);
+
+            return false;
+        }
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#Item_SerialNo").focusout(function () {
+            $.ajax({               
+                url:  "@Url.Action("Find_Item_Issue", "Item_Issue")",
+                data: {Item_Id: $('#Item_Id').val()},
+                dataType: "json",
+                type: "POST",
+                success: function (data) {
+                    $.each(data, function (key, val) {
+
+                        if (val === null) {
+
+                            if (key === 'previous_Emp_Name') {
+                                alert('Item does not issued Previously ');
+                            }
+                        }
+                        else {
+
+                            if (key === 'previous_Emp_Name') {
+                                $('#Previous_Emp_Name').val(val);
+                            }
+                            else if (key === 'previous_Custady_Id') {
+                                $('#Previous_Custady_Id').val(val);
+                            }
+                            else if (key === 'previous_Emp_Designation') {
+                                $('#Previous_Emp_Designation').val(val);
+                            }
+                            else if (key === 'previous_Emp_Dept') {
+                                $('#Previous_Emp_Dept').val(val);
+                            }
+                            else if (key === 'previous_Emp_Location') {
+                                $('#Previous_Emp_Location').val(val);
+                            }
+
+
+                        }
+
+
+
+                    });
+                }
+
+            });
+            //$("#Issued_date").focus();
+        });
+
+        $("#Issued_date").focusout(function () {
+
+            $("#Transfered_Emp_Name").focus();
+        });
+
+        $("#Transfered_Emp_Name").focusout(function () {
+
+            $("#Remarks").focus();
+        });
+
+        $("#Remarks").focusout(function () {
+
+            $("#btn_submit").focus();
+        });
+
+    });
+</script>
+
+
+<script type="text/javascript">
+    $('#Transfered_Emp_Name').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url:  "@Url.Action("AutoComplete_TransferEmployee", "Item_Issue")",
+                data: {EmpID:  request.term },
+                dataType: "json",
+                type: "POST",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item.transfered_Emp_Name + ' -- ' + item.transfered_Emp_Designation + '--' + item.transfered_Emp_Dept
+                            + '--' + item.transfered_Emp_Location + '--' + item.transfered_Custady_Id;
+                    }))
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    console.log('some error occured', textStatus, errorThrown);
+                }
+            });
+        },
+        minLength: 1,
+        select: function (event, ui) {
+            //alert('you have selected ' + ui.item.label);
+
+            $('#Transfered_Emp_Name').val(ui.item.label.split('--')[0]);
+            $('#Transfered_Emp_Designation').val(ui.item.value.split('--')[1]);
+            $('#Transfered_Emp_Dept').val(ui.item.label.split('--')[2]);
+            $('#Transfered_Emp_Location').val(ui.item.value.split('--')[3]);
+            $('#Transfered_Custady_Id').val(ui.item.value.split('--')[4]);
+
+            return false;
+        }
+    });
+</script>
+
+
+
+
+@*<script type="text/javascript">
+        $(document).ready(function () {
+
+            $("btn_submit").click(function () {
+
+                var submit = 0;
+                if ($('#Emp_Name').val() == '') {
+                    $("#IconEmp_Name").addClass("invalid");
+                    submit = 1;
+                }
+                if ($('#Emp_Name').val() == '') {
+                    $("#IconEmp_Name").addClass("invalid");
+                    submit = 1;
+                }
+                if ($('#Emp_Name').val() == '') {
+                    $("#IconEmp_Name").addClass("invalid");
+                    submit = 1;
+                }
+
+                if (submit == 1) {
+                    alert('please fill required field');
+                    return false;
+
+                }
+            });
+
+
+        });
+
+
+    </script>*@
+
+

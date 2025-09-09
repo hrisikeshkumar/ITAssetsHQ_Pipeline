@@ -1,0 +1,142 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+@model IList<RaiseIssue_Mod>
+
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+<div style="text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <p style="font-size:large; font-weight:bold;">  @ViewBag.IssueType Issues </p>
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="100%" colspan="2">
+                @using (Html.BeginForm("All_Asset_Issue_Histroy", "QRCode", FormMethod.Post))
+                {   
+                    <div class="col-rt-3 equal-height">
+                        <div class="sb-example-3">
+                            <table style="width:100%">
+                                <tr>                              
+                                    <td style="width:40%">                                    
+                                        <div class="custom-select">
+                                          <select name="IssueType" id="IssueType">
+                                            <option value="All">All Issues</option>
+                                            <option value="Pending">Pending Issues</option>
+                                            <option value="Resolved">Resolved Issues</option>
+                                          </select>
+                                        </div>
+                                    </td>                              
+                                    <td style="width:40%">
+                                         <div class="custom-select">
+                                          <select name="UserId" id="UserId">
+                                            <option value="AllUser">All Users</option>
+                                            <option value="ithelpdesk@icsi.edu">Hemant Bhardwaj</option>
+                                            <option value="dhwm@icsi.edu">Kasim Khan</option>
+                                            <option value="hwmnoida@icsi.edu">Kanchan Kumar</option>
+                                            <option value="hwmnoidanew@icsi.edu">Abhishek Raghav</option>
+                                            <option value="icsi.vc@icsi.edu">ICSI VC</option>
+                                            <option value="devendra.pant@icsi.edu">Devendra Pant</option>
+                                            <option value="gaurav.rathore2@icsi.edu">Gaurav Rathore</option>
+                                            <option value="it.clerk@icsi.edu">Braj Bhushan</option>
+                                          </select>
+                                        </div>
+                                    </td>
+                                     <td style="width:20%; text-align:center">
+                                          <button class="button_cls form-rounded">Submit</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                 }
+            </td>
+            
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+
+                <table style="width:100%">
+                    <tr>
+                        <th style="width:10%">
+                            Model 
+                        </th>
+                        <th style="width:10%">
+                            Asset Detail
+                        </th>
+                        <th style="width:10%">
+                            User 
+                        </th>
+                        <th style="width:10%">
+                            Date
+                        </th style="width:50%">
+                        <th>
+                            Issue Details
+                        </th>
+                        <th style="width:10%">
+                            Resolve 
+                        </th>                       
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Make_Model)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssetType_SerialNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Employee_Name_Desig_Dept)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Issue_Create_Date,  "{0:dd/MM/yyyy}")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IssueInfo)
+                            </td>
+                            <td>
+                                 @if(item.Issue_Resolve_Date != null )
+                                 {
+                                     @Html.DisplayFor(modelItem => item.Issue_Resolve_Date,  "{0:dd/MM/yyyy}")
+                                 }                                
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var issueType = '@(ViewBag.IssueType ?? "")'; // fallback to empty string if null
+        if (issueType !== '') {
+            $('#IssueType').val(issueType);
+        }
+
+        var User = '@(ViewBag.User ?? "")'; // fallback to empty string if null
+        if (User !== '') {
+            $('#UserId').val(User);
+        }
+
+    });
+</script>
+
+

@@ -1,0 +1,154 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Vendor
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Enter New Vendor</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Vendor_Create_Post", "Vendor", FormMethod.Post, new { encType = "multipart/form-data" }))
+    {
+
+        @Html.AntiForgeryToken()
+       
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Vendor Name
+
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.Vendor_name, new { @class = " form-rounded", @style = " width :40%; " })
+                    
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Vendor Address
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.Vendor_Addr, new { @class = " form-rounded", @style = " width :80%; " })
+                    
+                </td>
+            </tr>        
+
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :80%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Vendor_Details", "Vendor", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+<script src="~/js/Validation/jquery.validate.js"></script>
+<script src="~/js/Validation/jquery.validate.min.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.min.js"></script>
+
+
+<style type="text/css">
+    .valid {
+        visibility: hidden;
+    }
+
+    .invalid {
+        visibility: visible;
+    }
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSave').click(function () {
+            var Vendr_Name, Vendr_Addr
+            Vendr_Name = $("#Vendor_name");
+            Vendr_Addr = $("#Vendor_Addr");
+
+
+            if (Vendr_Name.val() == '') {
+                $("#IconVendor_name").addClass("invalid")
+                $("#IconVendor_name").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconVendor_name").addClass("valid")
+                $("#IconVendor_name").removeClass("invalid")
+            }
+
+
+            if (Vendr_Addr.val() == '') {
+                $("#IconVendr_Addr").addClass("invalid")
+                $("#IconVendr_Addr").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconVendr_Addr").addClass("valid")
+                $("#IconVendr_Addr").removeClass("invalid")
+            }
+
+
+
+        });
+    });
+</script>
+

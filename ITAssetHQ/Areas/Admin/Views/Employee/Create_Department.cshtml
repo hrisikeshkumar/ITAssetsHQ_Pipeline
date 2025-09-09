@@ -1,0 +1,128 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Department
+
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Enter New Department</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Create_Department_Post", "Employee", FormMethod.Post))
+    {
+        
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:20%; height:50px;">
+                    Department Name
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Department_Name, new { @class = " form-rounded", @style = " width :90%; " })
+                    <i id="IconEmp_Name" class="valid fa fa-question-circle" style="font-size:24px;color:red"  ></i>
+                </td>
+                <td style="width:20%;">
+                    Microsoft Id
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Department_MicrosoftID, new { @class = " form-rounded", @style = " width :90%; " })            
+                </td>
+            </tr>
+         
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:20%; "></td>
+
+                <td style="width: 30%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button name="btnSave" id="btnSave" class="button_cls form-rounded">Submit</button>
+
+                </td>
+
+                <td style="width: 20%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Designation_Details", "Employee", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:30%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+
+<script src="~/js/Validation/jquery.validate.js"></script>
+<script src="~/js/Validation/jquery.validate.min.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSave').click(function () {
+           
+            Dept = $("#Department_Name").val();
+
+            if (Dept == '') 
+            {
+                $("#Department_Name").focus();
+                $("#IconEmp_Name").addClass("invalid")
+                $("#IconEmp_Name").removeClass("valid")
+                return false;
+            }        
+
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#Department_Name').focusout(function () {
+            if ($('#Department_Name').val() == '') 
+            {
+                $("#IconEmp_Name").addClass("invalid")
+                $("#IconEmp_Name").removeClass("valid")         
+            }
+            else {
+                $("#IconEmp_Name").addClass("valid")
+                $("#IconEmp_Name").removeClass("invalid")
+            }
+        });
+    
+    });
+
+</script>
+
+

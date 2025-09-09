@@ -1,0 +1,646 @@
+﻿@using IT_Hardware.Controllers
+@{
+    ViewBag.Title = "Index";
+}
+@model IT_Hardware.Areas.Admin.Models.Proposal_details
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<style type="text/css">
+
+    .hideElement {
+        display: none;
+    }
+
+
+    .btn_download {
+        display: inline-block;
+        outline: 0;
+        cursor: pointer;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-weight: 300;
+        line-height: 10px;
+        vertical-align: middle;
+        border: 1px solid;
+        border-radius: 6px;
+        color: #ffffff;
+        background-color: #2ea44f;
+        border-color: #1b1f2326;
+        box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+        transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+        transition-property: color, background-color, border-color;
+    }
+
+        .btn_download:hover {
+            background-color: rgb(155 221 30 / 0.73);
+            border-color: #1b1f2326;
+            transition-duration: 0.1s;
+        }
+
+    .row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .block {
+        width: 100px;
+    }
+
+</style>
+
+
+<div style="text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Update Proposal Status</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+        <table class=" table-hover table-striped shadow " style="width:100%">
+            <tr>
+                <td style="text-align:left; width:15%; font-weight:bold ;  " class='table-active'>
+                    Proposal Information @Html.HiddenFor(x => x.Proposal_Id)
+                </td>
+                <td style="text-align:center; width:85%; " colspan="3" class='table-active'>
+                    @Html.TextAreaFor(x => x.Utilization_Details, new { @readonly = "true", @rows="2", @style = " width :100%;  border-width:0px; text-align:center; background-color:#e6e6e6;" })
+                </td>                       
+            </tr>
+            <tr>
+                <td style="width:100%;  text-align:center;" colspan="4">
+                    <table style="width:100%;" class=" table-hover table-striped shadow " id="tbl_statusGrid">
+                        <thead>
+                            <tr class="table-active">
+                                <td style="font-weight:bold; width: 10%; text-align:left; border:solid; border-width:1px;" class=""> Date</td>
+                                <td style="font-weight:bold; width: 15%; text-align:left; border:solid; border-width:1px; "> Sender </td>
+                                <td style="font-weight:bold; width: 15%; text-align:left; border:solid; border-width:1px;"> Receiver </td>
+                                <td style="font-weight:bold; width: 15%; text-align:center; border:solid; border-width:1px; "> File </td>
+                                <td style="font-weight:bold; width: 40%; text-align:center; border:solid; border-width:1px;"> Remarks </td>
+                                <td style="font-weight:bold; width: 5%;  text-align:center; border:solid; border-width:1px;"> Action </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.WorkFlowList)
+                            {
+
+                                <tr>
+                                    <td style="width: 10%; text-align:left; border:solid; border-width:1px; ">
+                                        @Html.DisplayFor(modelItem => item.SendDate)
+                                    </td>
+                                    <td style="width: 15%; text-align:left; border:solid; border-width:1px; ">
+                                        @Html.DisplayFor(modelItem => item.FromDte)
+                                    </td>
+                                    <td style="width: 15%; text-align:left; border:solid; border-width:1px;">
+                                        @Html.DisplayFor(modelItem => item.ToDte)
+                                    </td>
+                                    <td style="width: 15%; text-align:center;  height: 30px; border:solid; border-width:1px; ">
+                                        
+                                            @if(item.File_Id!="")
+                                            {
+                                                <input type='submit' value='Download' class='btn_download WorkFlowFile' id='@item.File_Id'>
+                                            }
+                                            else
+                                            {
+                                               <span>Not Uploaded</span>
+                                            }
+                                        
+                                    </td>
+                                    <td style="width: 40%; text-align:left; border:solid; border-width:1px;">
+                                        @Html.DisplayFor(modelItem => item.Remarks)
+                                    </td>
+                                    <td style="width: 5%; text-align:center;  border:solid; border-width:1px;">
+                                        @if(item.LastRow !=0)
+                                        {
+                                            <input type='submit' value='Delete' class='btn_delete deleteGridRow' id='@item.WorkFlow_Id'>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="width: 10%; text-align:left; ">
+                                 
+                                    @Html.TextBoxFor(x => x.Work_Flow.SendDate, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :95%; " })
+                                </td>
+                                <td style="width: 15%; text-align:left; ">
+                                    @Html.DropDownListFor(x => x.Work_Flow.FromDte, Model.Department_List, new { @class = " form-rounded", @style = " width :95%; " })
+                                </td>
+                                <td style="width: 15%; text-align:left; ">
+                                    @Html.DropDownListFor(x => x.Work_Flow.ToDte, Model.Department_List, new { @class = " form-rounded", @style = " width :95%; " })
+                                 </td>
+                                <td style="width: 15%; text-align:left; ">
+                                    <input type="file" id="WorkFlow_File" name="WorkFlow_File"  /> 
+                                </td>
+                                <td style="width: 40%; text-align:left; ">
+                                    @Html.TextAreaFor(x => x.Work_Flow.Remarks, new { @rows = "1", @style = " width :98%; " })
+                                </td>
+                                <td style="width: 5%; text-align:center; ">
+                                    <input type='submit' value='Save' class='button_cls form-rounded' id='btn_SaveFlow'>
+                                </td>
+                            </tr>
+                        </tfoot>
+                  </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:100%; height:20px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; ">Final Approval File</td>
+                <td style="width: 75%;" colspan="3">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width:100%;" colspan="3" class="DelPropFile">
+                                <input type="file" name="postedFile" id="FileUpload_Id" />
+                                <input type="submit" id="btnFileUpload" class="btn_download " value="Upload" />
+                                <progress id="fileProgress" style="display: none"></progress>
+                                <span id="lblMessage" style="color: Green"></span>
+                            </td>
+                        </tr>
+                        <tr><td colspan="3" style="height:10px;"></td></tr>
+                        <tr>
+                            <td>
+                                <table id="Files_Grid" style="width:100%;">
+                                    <tr>
+                                        <td style="width:50%; font-weight:bold">File Name</td>
+                                        <td style="width: 25%; font-weight: bold"> Download</td>
+                                        <td style="width: 25%; font-weight: bold"> Delete</td>
+                                    </tr>
+
+                                    @foreach (var item in Model.Prop_Files)
+                                    {
+                                        <tr>
+                                            <td class='filename'>
+                                                <p>@Html.DisplayFor(modelItem => item.File_Name)</p>
+                                            </td>
+                                            <td>
+                                                <input type='submit' value='Download' class='cssdownload btn_download' id='@item.File_Id' />
+                                            </td>
+                                            <td >
+                                                <input type='submit' class='appDetails btn_delete DelPropFile' id='@item.File_Id' value='Delete' />
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>            
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:20px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td style="width:25%" >
+                    Status
+                </td>
+                <td align="center" style="text-align:center; align-items:center;width:25%">
+                    @Html.DropDownListFor(x => x.StatusId, Model.Status_List, new { @class = " form-rounded",  @style = " width :90%; " })
+                </td>
+                <td style="width:25%; text-align:center;">
+                    <input type='submit' value='Save Status' class='button_cls form-rounded' id='btn_SaveStatus'>
+                </td>
+                <td style="align-self:right" align="right">
+                    @Html.ActionLink("Back", "Admin_Dashboard", "Admin_Dashboard", null, new { @class = "button_cls form-rounded", })
+                </td>
+            </tr>
+        </table>
+
+</div>
+
+@* --------------------------------------- Save WorkFlow Grid--------------------------------------------------------------- *@
+
+<script type="text/javascript">
+    
+
+    $(function () {
+
+        $('#btn_SaveFlow').click(function (event) {
+
+            event.preventDefault();
+
+            var formData = new FormData();
+            formData.append("ProposalId", $('#Proposal_Id').val());
+            formData.append("data.SendDate", $('#Work_Flow_SendDate').val());
+            formData.append("data.FromDte", $('#Work_Flow_FromDte').val());
+            formData.append("data.ToDte", $('#Work_Flow_ToDte').val());
+            formData.append("data.Remarks", $('#Work_Flow_Remarks').val());
+
+            // Append file(s)
+            var files = $('#WorkFlow_File').get(0).files;
+            if (files.length > 0) {
+                formData.append("data.WorkFlow_File", files[0]); // assuming single file
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddWorkFlow", "Admin_Dashboard")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                     Bind_WorkFlow(data);
+                },
+                error: function (xhr) {
+                    alert('Error occurred: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+
+
+
+// @*// --------------------------------------------Delete WorkFlow GridRow------------------------------------------- *@
+
+    $(function () {
+
+        $('.deleteGridRow').click(function (event) {
+
+            var workflow_Id = $(this).attr('id');
+            if (confirm('Are you sure to delete this?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteWorkFlow", "Admin_Dashboard")",
+                    datatype: "Json",
+                    data: { WorkFlow_Id: workflow_Id, ProposalId: $('#Proposal_Id').val() },
+                    success: function (data) {
+                            Bind_WorkFlow (data);
+                    }
+                });
+            }
+        });
+    });
+
+
+    // @* //------------------- WorkFlow  Table Binding --------------------- *@
+    function Bind_WorkFlow ( data )
+    {
+        var markup = "" ;
+        $("#tbl_statusGrid TBODY TR").remove();
+        if(data.length > 0)
+        {
+                $.each(data, function (key, val) {
+                    markup = markup+ "<tr>" ;
+                    $.each(val, function (key, val) {
+                                     
+                                         
+                        if(key=='sendDate')
+                        {
+                            if(val.length > 0)
+                            {
+                                val = convertDateFormat(val.substring(0, 10));
+                            }
+                            markup = markup + "<td  style='width: 10%; text-align:left; border:solid; border-width:1px;' >" + val + "</td>";
+                        }
+                        if(key=='fromDte')
+                        {
+                            markup = markup + "<td  style='width: 14%; text-align:left; border:solid; border-width:1px; ' > " + val + "</td>";
+                        }
+                        if(key=='toDte')
+                        {
+                            markup = markup + "<td  style='width: 14%; text-align:left; border:solid; border-width:1px;  '  > " + val + "</td>";
+                        }                     
+                        if(key=='file_Id')
+                        {
+                            if (val!='')
+                            {
+                                markup = markup + "<td  style='width: 15%; text-align:center;  height: 20px; border:solid; border-width:1px;  ' >" +
+                                "<input type='submit' value='Download File' class='btn_download WorkFlowFile' id='"+ val +"' /> </td>";
+                            }
+                            else
+                            {
+                                markup = markup + "<td  style='width: 15%; text-align:center; border:solid; border-width:1px;  ' >  Not Uploaded  </td>";
+                            }
+                                            
+                        }
+                        if(key=='remarks')
+                        {
+                            markup = markup + "<td  style='width: 40%; text-align:center; border:solid; border-width:1px; '  > " + val + " </td>";
+                        }
+                        if(val=='lastRow')
+                        {
+                            if(val !=0)
+                            {
+                                markup = markup + "<td style=' width: 7%; text-align:center; border:solid; border-width:1px; '>  <input type='submit' class='deleteFlow btn_delete' id='" + val + "' value='Delete' > </input> </td></tr>";                                               
+                            }
+                            else
+                            {
+                                markup = markup + "<td style=' width: 7%; text-align:center; border:solid; border-width:1px; '>  </td></tr>";
+                            }
+                        }                                          
+                });
+                markup = markup + "</tr>" 
+            });
+                                
+            $("#tbl_statusGrid").append(markup);
+        }
+
+    };
+
+ </script>
+
+@* ----------------------------------------   Save Status-------------------------------------------------------------- *@
+
+
+<script type="text/javascript">
+    
+
+    $(function () {
+
+        $('#btn_SaveStatus').click(function (event) {
+
+            event.preventDefault();
+            var status= $('#StatusId').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveStatus", "Admin_Dashboard")',
+                data: {Proposal_Id: $('#Proposal_Id').val(), Status: status},
+                datatype: "Json",
+                success: function (data) {
+                    if(data > 0)
+                    {
+                        alert('Status Save Successfully');
+                    }
+                    else
+                    {
+                        alert('Status is not Saved');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error occurred: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+
+ </script>
+
+
+@*------------------------------------ Upload Approval File --------------------------------------------------------------*@
+
+<script type="text/javascript">
+    
+$(function () {
+
+        $('#btnFileUpload').click(function (event) {
+
+
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#FileUpload_Id").get(0);
+                var files = fileUpload.files;
+
+                var fileRefId = $("#Proposal_Id").val();
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                fileData.append('Proposal_Id', fileRefId);
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Upload_FinalApprovalFile", "Admin_Dashboard")",                   
+                    data: fileData,
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    cache: false,
+                    success: function (response) {
+                        if (response.key == '') {
+                            alert('');
+                        }
+                        else {
+                            $("#Files_Grid tr").remove();
+                            markup = "<tr><th style='width: 50%;'> File Name </th> <th style='width: 25%;'> Download </th> <th style='width: 25%; text-align: center'> Delete </th> </tr>";
+                            tableBody = $("#Files_Grid tbody");
+                            tableBody.append(markup);
+
+                            if (response != null) {
+                                $.each(response, function (key, val) {
+                                    markup = "<tr><td class='filename'> <p>" + val.file_Name + "</p> </td> " +
+                                        "<td>  <input type='submit' value='Download' class='cssdownload btn_download' id='" + val.file_Id + "' > </input> </td> " +
+                                        "<td style=' text-align: center'>  <input type='submit' class='appDetails btn_delete' id='" + val.file_Id + "' value='Delete' > </input> </td></tr> "
+
+                                    tableBody = $("#Files_Grid tbody");
+                                    tableBody.append(markup);
+                                });
+                            }
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+            event.preventDefault();
+        });
+    });
+
+</script>
+
+@* --------------------------------------------     Delete Approval File    ----------------------------------------- *@
+<script type="text/javascript">  
+    $(function () {
+
+        $(document).on("click", ".appDetails", function () {
+            var clickedBtnID = $(this).attr('id');
+
+            var fileRefId = $("#Proposal_Id").val();
+
+            if (confirm('Are you sure you want to delete this?')) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteFile_FinalApproval", "Admin_Dashboard")",
+                    datatype: "Json",
+                    data: { FileId: clickedBtnID, RefId: fileRefId },
+                    success: function (response) {
+
+
+                        $("#Files_Grid tr").remove();
+
+                        markup = "<tr><th style='width: 50%;'> File Name </th> <th style='width: 25%;'> Download </th> <th style='width: 25%; text-align: center'> Delete </th> </tr>";
+                        tableBody = $("#Files_Grid tbody");
+                        tableBody.append(markup);
+
+
+                        if (response != null) {
+
+                            $.each(response, function (key, val) {
+
+                                markup = "<tr><td> " + val.file_Name + " </td> " +
+                                    "<td>  <input type='submit' value='Download' class='cssdownload btn_download' id='" + val.file_Id + "' > </input> </td> " +
+                                    "<td style=' text-align: center'>  <input type='submit' class='appDetails btn_delete' id='" + val.file_Id + "' value='Delete' > </input> </td></tr> "
+
+                                tableBody = $("#Files_Grid tbody");
+                                tableBody.append(markup);
+
+                            });
+                        }
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+
+                });
+
+            }
+
+            event.preventDefault();
+
+        });
+    });
+</script>
+
+@* ------------------------------------------------------  Final Approval File Download  ------------------------------ *@
+<script type="text/javascript">
+    $(document).on("click", ".cssdownload", function () {
+        
+        var fileID = $(this).attr('id');
+        var FileName = $(this).closest("tr")   // Finds the closest row <tr>
+                       .find(".filename")
+                       .find("p")
+                       .text();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download_FinalApprovalFile", "Admin_Dashboard")",
+            data: { fileName: fileID },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, FileName);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", FileName);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+        event.preventDefault();
+
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+
+@* -------------------------------------  Change Date Format  -------------------------------------------------- *@
+<script  type="text/javascript">
+    
+    function convertDateFormat(dateString) {
+          // Split the date string into year, month, and day
+          const [year, month, day] = dateString.split('-');
+
+          // Reconstruct the date string in dd-mm-yyyy format
+          return `${day}-${month}-${year}`;
+    }
+
+</script>
+
+@* ----------------------------------------------- WorkFlow File Download -------------------------------- *@
+
+<script type="text/javascript">
+
+    $(document).on("click", ".WorkFlowFile", function (event) {
+
+        var fileID = $(this).attr('id');     
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download_WorkFlowFile", "Admin_Dashboard")",
+            data: { fileName: fileID },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileID);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileID);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+@*---------------------------------------------------------------------------------------------------------------*@
+
+
+<script type="text/javascript">  
+    $(document).ready() 
+    {
+        
+        var SameUser =  "@ViewBag.SameUser" ;
+        if (SameUser  !="Yes")
+        {
+              $(".DelPropFile").addClass("hideElement");
+        }
+        
+    };
+</script>

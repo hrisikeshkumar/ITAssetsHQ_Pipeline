@@ -1,0 +1,116 @@
+﻿@model List< IT_Hardware.Areas.Admin.Models.mod_AMC_Warranty_List>
+
+@{
+    ViewBag.Title = "Find_Warranty_Expired";
+}
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;"> @ViewBag.Assettype  under   Warranty </p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    @using (Html.BeginForm("Find_Warranty_Expired", "IT_Hardware_AMC", new { Types = ""}, FormMethod.Post))
+    {
+        <table class=" table-hover table-striped shadow " style="width:100%">
+            <tr>
+                <td style="text-align:right">
+                    <a href="@Url.Action("Amc_DashBoard", null, new { area = string.Empty, controller = "IT_Hardware_AMC"  , Types ="Laptop"   })">
+                        Back
+                    </a>
+                </td>
+                
+            </tr>    
+            <tr>
+                <td   style="height:20px;">
+                    
+                </td>
+            </tr>
+            <tr>
+               
+                <td >
+                    <table style="width:100%">
+
+                        <tr>
+                            <th>
+                                Employee Name
+                            </th>
+                            <th>
+                                Designation
+                            </th>
+                            <th>
+                                Serial Number
+                            </th>                         
+                            <th>
+                                Warrany End Date
+                            </th>
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Emp_Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Designation)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Item_SlNo)
+                                    @Html.HiddenFor(modelItem => item.Item_Id)
+                                </td>
+                               
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Warranty_End_Dt)
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Find_Warranty_Expired", null, new { area = string.Empty, controller = "IT_Hardware_AMC"  , Types ="Laptop", Item_Id = item.Item_Id  }
+                                        )">
+                                        Add to AMC
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+}
+
+
+
+
+
+

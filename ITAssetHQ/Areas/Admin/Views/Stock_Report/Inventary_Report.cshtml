@@ -1,0 +1,108 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+
+@model IList<Mod_StockReport>
+
+@{ Layout = null; }
+
+@{
+    ViewBag.Title = "Inventary_Report";
+}
+
+<table style="width:100%; border:solid; border-width:1px; border-color:black;">
+    <tr>
+
+        <td colspan="10" style="width: 100%; background-color: gainsboro; text-align:center">
+            <h3>
+                Stock Report
+            </h3>
+        </td>
+
+    </tr>
+    <tr>
+        <td colspan="10">
+            <div id="Grid" style="width:100%;">
+                <table cellpadding="5" cellspacing="0" style="width:100%;  border: 1px solid #ccc;font-size: 9pt;">
+                    <tr>
+
+
+                        <td style="width: 5%; background-color: gainsboro; text-align: center; border: solid; border-width: 1px; border-color: black;"> SL No.  </td>
+                        <td style="width: 15%; background-color: gainsboro; text-align: left; border: solid; border-width: 1px; border-color: black;"> Emp Name  </td>
+                        <td style="width: 15%; background-color: gainsboro; text-align: left; border: solid; border-width: 1px; border-color: black;"> Designation  </td>
+                        <td style="width: 15%; background-color: gainsboro; text-align: left; border: solid; border-width: 1px; border-color: black; "> Dept  </td>
+                        <td style="width: 6%; background-color: gainsboro; text-align: center; border: solid; border-width: 1px; border-color: black;"> Make  </td>
+                        <td style="width: 10%; background-color: gainsboro; text-align: left; border: solid; border-width: 1px; border-color: black; "> Model  </td>
+                        <td style="width: 10%; background-color: gainsboro; text-align: center; border: solid; border-width: 1px; border-color: black;"> Serial No.  </td>
+                        <td style="width: 12%; background-color: gainsboro; text-align: center; border: solid; border-width: 1px; border-color: black;"> Procurement Date </td>
+                        <td style="width: 12%; background-color: gainsboro; text-align: center; border: solid; border-width: 1px; border-color: black;"> Warranty Exp. Date  </td>
+                        <td style="width: 5%; background-color: gainsboro; text-align: center; border: solid; border-width: 1px; border-color: black;"> Obsolete  </td>
+
+
+
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td style=" text-align: center; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.SLNo)     </td>
+                            <td style=" text-align: left; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Emp_Name)     </td>
+                            <td style=" text-align: left; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Emp_Designation)     </td>
+                            <td style=" text-align: left; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Emp_Dept)     </td>
+                            <td style=" text-align: center; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Item_Make)     </td>
+                            <td style=" text-align: left; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Item_Model)     </td>
+                            <td style=" text-align: center; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Item_SlNo)     </td>
+                            <td style=" text-align: center; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Item_Proc_date)     </td>
+                            <td style=" text-align: center; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Warranty_Exp_date)     </td>
+                            <td style=" text-align: center; border: solid; border-width: 1px; border-color: black;">   @Html.DisplayFor(modelItem => item.Obsolete)     </td>
+
+
+                        </tr>
+                    }
+                </table>
+            </div>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td colspan="10" style="height:50px;">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10" style="height:50px; text-align:center">
+            @using (Html.BeginForm("Export", "Stock_Report", FormMethod.Post))
+            {
+                <input type="hidden" name="GridHtml" />
+                <input type="submit" id="btnSubmit" value="Print To Pdf" />
+            }
+
+            <input type="submit" id="btnExport" value="Export To Excel" />
+        </td>
+    </tr>
+
+</table>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+            $("input[name='GridHtml']").val($("#Grid").html());
+        });
+    });
+
+</script>
+
+
+<script src="~/js/table2excel.js"></script>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnExport").click(function () {
+            $("#Grid").table2excel({
+                filename: "StockReport.xls"
+            });
+        });
+    });
+</script>
+

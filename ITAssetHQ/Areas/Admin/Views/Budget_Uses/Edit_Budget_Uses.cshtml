@@ -1,0 +1,333 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Budget_Uses
+
+
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Edit Budget Uses</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Update_Budget_Uses", "Budget_Uses", FormMethod.Post))
+    {
+
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+
+                <td style="width:25%; height:50px;">
+                    Budget Uses for
+                </td>
+                <td style="width:25%;">
+
+                    @Html.DropDownListFor(x => x.Budget_Type,
+                             new List<SelectListItem>()
+                {
+                new SelectListItem() { Text= "Budget Only", Value = "Budget" },
+                new SelectListItem() { Text= "Invoice Processing", Value = "Payment"},
+                }
+                             , "Please select a Type", new { @class = " form-rounded", @disabled = "true", @style = " width :96%; " })
+
+                </td>
+
+                <td style="width:25%; ">
+                    Budget Year
+                </td>
+                <td style="width:25%;">
+
+                    @Html.DropDownListFor(x => x.Budget_Year, Model.Budget_Year_List, new { @class = " form-rounded", @disabled = "true", @style = " width :90%; " })
+
+                </td>
+     
+            </tr>
+
+            <tr id="PO_Required" class="hideRow">
+                <td style="width:25%; height:50px;">
+                    Purchase Order
+                    @Html.HiddenFor(x => x.PO_id, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.PO_No, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Budget Head Name
+                    @Html.HiddenFor(x => x.Budget_Uses_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                    @Html.HiddenFor(x => x.Budget_Head_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.DropDownListFor(x => x.Budget_Head_Id, Model.Budget_List,
+                   new { @class = " form-rounded", @disabled = "true", @style = " width :90%; background-color: #e4f0f0;" })
+
+
+                </td>
+
+            </tr>
+
+            <tr>
+                <td style="width:25%;">
+                    Utilization Details
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Utilization_Details, new { @rows = "4", @disabled = "true", @style = " width :96%; " })
+                </td>
+            </tr>
+
+
+            <tr>
+                <td style="width:25%;">
+                    Total Approved Budget
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Total_Approved_Budget, new { @class = " form-rounded", @readonly = "true", @style = " width :90%; background-color: #e4f0f0;" })
+                </td>
+
+                <td style="width:25%; height:50px;">
+                    Processing Date
+                </td>
+                <td style="width:25%;">
+
+                    @Html.TextBoxFor(x => x.Processing_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :90%; " })
+                </td>
+            </tr>
+
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Amount Utilized
+                </td>
+                <td style="width:25%;">
+
+                    @Html.TextBoxFor(x => x.Amount_Utilized_Before, new { @class = " form-rounded", @readonly = "true", @style = " width :90%; background-color: #e4f0f0;" })
+                </td>
+                <td style="width:25%; height:50px;">
+                    Total Available Budget
+                </td>
+                <td style="width:25%;">
+
+                    @Html.TextBoxFor(x => x.Balance_Available, new { @class = " form-rounded", @readonly = "true", @style = " width :90%; background-color: #e4f0f0;" })
+                </td>
+
+            </tr>
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Budget for the Proposal
+                </td>
+                <td style="width:25%;">
+
+                    @Html.TextBoxFor(x => x.Budget_Amount, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:25%; height:50px;">
+                    Remaning Total Budget
+                </td>
+                <td style="width:25%;">
+
+                    @Html.TextBoxFor(x => x.Remaning_Balance, new { @class = " form-rounded", @readonly = "true", @style = " width :90%; background-color: #e4f0f0;" })
+                </td>
+
+            </tr>
+
+
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :96%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Budget_Uses_Details", "Budget_Uses", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#Budget_Year').change(function () {
+            $('#Budget_Head_Id').empty();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Budget_List", "Budget_Uses")",
+                datatype: "Json",
+                data: { Yearcode: $('#Budget_Year').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Budget_Head_Id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+
+
+    $(function () {
+
+        $('#Budget_Head_Id').change(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Prev_Budget_info", "Budget_Uses")",
+                dataType: "json",
+                data: { Yearcode: $('#Budget_Year').val(), Bud_Head_Id: $('#Budget_Head_Id').val() },
+                success: function (response) {
+                    if (response != null) {
+                        $('#Total_Approved_Budget').val(response.Total_Approved_Budget);
+                        $('#Amount_Utilized_Before').val(response.Amount_Utilized_Before);
+                        $('#Balance_Available').val(response.Balance_Available);
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+
+        });
+    });
+
+
+    $(function () {
+        $('#Budget_Amount').focusout(function () {
+            $('#Remaning_Balance').val($('#Balance_Available').val() - $('#Budget_Amount').val());
+        });
+    });
+
+</script>
+
+
+
+
+@*---------------------------------------- Budget uses type --------------------------------------*@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+    
+            if( $('#Budget_Type').val() !='Payment')
+                $('#PO_Required').addClass('hideRow');
+            else
+                $('#PO_Required').removeClass('hideRow');
+        }); 
+
+
+    $(function () {
+
+       $('#Budget_Type').change(function () {
+               if( $('#Budget_Type').val() !='Payment')
+                   $('#PO_Required').addClass('hideRow');
+               else
+                   $('#PO_Required').removeClass('hideRow');
+       });
+
+    });
+
+
+</script>
+
+<style type="text/css">
+
+    .hideRow {
+        display: none;
+    }
+
+</style>
+
+
+
+@* -----------------------------------------------    Auto Complete     -------------------------------------------------- *@
+
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $('#PO_No').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "@Url.Action("AutoComplete", "Budget_Uses")",
+                data: {InputData: request.term},
+                dataType: "json",
+                type: "POST",
+                // contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return   item.pO_Id + '--' + item.vendor_Name + '--' + item.pO_No + '--' + item.pO_Date + '--' + item.pO_Detail ;
+
+                    }))
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    console.log('some error occured', textStatus, errorThrown);
+                }
+            });
+        },
+        minLength: 1,
+        select: function (event, ui) {
+
+            $('#PO_id').val(ui.item.label.split('--')[0]);
+            $('#PO_No').val(ui.item.value.split('--')[2]);
+
+            return false;
+        }
+    });
+</script>
+
+
+

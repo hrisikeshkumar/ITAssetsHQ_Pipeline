@@ -1,0 +1,138 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Stock_Report
+
+
+@{
+    ViewBag.Title = "Budget_Report_Detail";
+}
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+
+        <tr>
+            <td colspan="2" style="text-align:center">
+                <h3> Budget Report </h3>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="height:20px;">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center; align-items:center; align-content:center;align-self:center">
+
+                @using (Html.BeginForm("Post_Budget_Report", "Stock_Report", FormMethod.Post))
+                {
+
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:30%;">
+                                Budget Year
+                            </td>
+                            <td style="width:70%;">
+                                @Html.DropDownListFor( x =>x.Bud_year_Id, Model.BudYear , new { style = "width:80%", @class = "form-rounded" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="height:20px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:30%;">
+                                Budget Head
+                            </td>
+                            <td style="width:70%;">
+
+                                @Html.DropDownList("Report_Type", new List<SelectListItem>
+                                    {
+                                    new SelectListItem{ Text="Pdf Report", Value = "Pdf" },
+                                    new SelectListItem{ Text="Excel Report", Value = "Excel" },
+                                 }, new { style = "width:80%", @class = "form-rounded" })
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="height:20px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:30%;">
+                                Report Type
+                            </td>
+                            <td style="width:70%;">
+
+                                @Html.DropDownList("Report_Type", new List<SelectListItem>
+                                {
+                                    new SelectListItem{ Text="Pdf Report", Value = "Pdf" },
+                                    new SelectListItem{ Text="Excel Report", Value = "Excel" },
+                                 }, new { style = "width:80%", @class = "form-rounded" })
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="height:50px;">
+                            </td>
+                        </tr>
+
+                        <tr style=" height: 50px; ">
+                            <td colspan="2">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td style="width:25%"></td>
+                                        <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                                            <button class="button_cls form-rounded">Submit</button>
+
+                                        </td>
+
+                                        <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                                            @Html.ActionLink("Back", "Admin_Dashboard", "Admin_Dashboard", null, new { @class = "button_cls form-rounded", })
+                                        </td>
+                                        <td style="width:25%"></td>
+                                    </tr>
+                                </table>
+                            </td>
+
+
+                        </tr>
+
+                    </table>
+
+
+                }
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+
+

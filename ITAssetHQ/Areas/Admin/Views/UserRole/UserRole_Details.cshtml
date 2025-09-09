@@ -1,0 +1,195 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model IList<Mod_UserRole>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<style type="text/css">
+    .button_cls {
+        background: #1AAB8A;
+        color: #fff;
+        border: none;
+        position: relative;
+        height: 25px;
+        font-size: 1em;
+        padding: 0 2em;
+        cursor: pointer;
+        transition: 800ms ease all;
+        outline: none;
+    }
+
+        .button_cls:hover {
+            background: #fff;
+            color: #1AAB8A;
+        }
+
+        .button_cls:before, button:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 2px;
+            width: 0;
+            background: #1AAB8A;
+            transition: 400ms ease all;
+        }
+
+        .button_cls:after {
+            right: inherit;
+            top: inherit;
+            left: 0;
+            bottom: 0;
+        }
+
+        .button_cls:hover:before, button:hover:after {
+            width: 100%;
+            transition: 800ms ease all;
+        }
+</style>
+
+
+<style type="text/css">
+
+    .form-rounded {
+        border-radius: 3rem;
+    }
+</style>
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Assign Roles to the Users</p>
+
+</div>
+
+
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    @using (Html.BeginForm("Update_UserRole", "UserRole", FormMethod.Post))
+    {
+
+
+        <table class=" table-hover table-striped shadow " style="width:100%">
+            <tr>
+                <td width="75%">
+
+                    <div class="col-rt-3 equal-height">
+                        <div class="sb-example-3">
+                            <!-- partial:index.partial.html -->
+                            <div class="search__container">
+
+                                <input class="search__input" type="text" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </td>
+                <td align="right" width="25%">
+                    <h4>
+                        <button class="button_cls form-rounded">Save</button>
+
+                    </h4>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top:5px;">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%">
+                        <tr>
+                            <th style="width:28%; text-align:left; vertical-align:top">
+                                User Name
+                            </th>
+                            <th style="width: 12%; text-align: center; vertical-align: top">
+                                Super Admin
+                            </th>
+                            <th style="width: 12%; text-align: center; vertical-align: top">
+                                Admin
+                            </th>
+                            <th style="width: 12%; text-align: center; vertical-align: top">
+                                Manager
+                            </th>
+                            <th style="width: 12%; text-align: center; vertical-align: top">
+                                Inventory Manager
+                            </th>
+                            <th style="width: 12%; text-align: center; vertical-align: top">
+                                Server Engineer
+                            </th>
+                            <th style="width: 12%; text-align: center; vertical-align: top">
+                                FMS Engineer
+                            </th>
+
+                        </tr>
+
+                        @*@foreach (var item in Model)
+                        {*@
+                            @if (Model != null)
+                            {
+                                for (var i = 0; i < Model.Count; i++)
+                                {
+
+                                    <tr>
+                                        <td style="width: 28%; text-align: left; vertical-align: top">
+                                            @Html.DisplayFor(modelItem => Model[i].User_fullname)
+                                            @Html.HiddenFor(modelItem => Model[i].User_ID)
+                                            @Html.HiddenFor(modelItem => Model[i].User_fullname)
+                                        </td>
+                                        <td style="width: 12%; text-align: center; vertical-align: top">
+                                            @Html.CheckBoxFor(modelItem => Model[i].SU_Role)
+                                        </td>
+                                        <td style="width: 12%; text-align: center; vertical-align: top">
+                                            @Html.CheckBoxFor(modelItem => Model[i].Admin_Role)
+                                        </td>
+                                        <td style="width: 12%; text-align: center; vertical-align: top">
+                                            @Html.CheckBoxFor(modelItem => Model[i].Manager_Role)
+                                        </td>
+                                        <td style="width: 12%; text-align: center; vertical-align: top">
+                                            @Html.CheckBoxFor(modelItem => Model[i].InventoryManager_Role)
+                                        </td>
+                                        <td style="width: 12%; text-align: center; vertical-align: top">
+                                            @Html.CheckBoxFor(modelItem => Model[i].ServerEngineer_Role)
+                                        </td>
+                                        <td style="width: 12%; text-align: center; vertical-align: top">
+                                            @Html.CheckBoxFor(modelItem => Model[i].FmsEngineer_Role)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            </table>
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    }
+</div>
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+

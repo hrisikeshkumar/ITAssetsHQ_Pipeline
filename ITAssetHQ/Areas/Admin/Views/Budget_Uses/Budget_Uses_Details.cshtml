@@ -1,0 +1,217 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model Mod_Budget_Uses
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Budget Uses List</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="85%" colspan="2">
+
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width: 20%; font-weight: bold">
+                            Budget Year
+                        </td>
+                        <td style="width:30%;">
+                            @Html.DropDownListFor(x => x.Budget_Year, Model.Budget_Year_List, new { @class = " form-rounded", @style = " width :90%; " })
+                        </td>
+                        <td style="width: 20%; font-weight: bold">
+                            Budget Name
+                            @Html.HiddenFor(x => x.Budget_Uses_Id, new { @class = " form-rounded", @style = " width :90%; " })
+                        </td>
+                        <td style="width:30%;">
+                            @Html.DropDownListFor(x => x.Budget_Head_Id, new SelectList(string.Empty, "Value", "Text"), "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </td>
+            <td align="right" width="15%">
+                <h4>
+                    @Html.ActionLink("Add New", "Budget_Uses_Create_Item", "Budget_Uses")
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="width:100%;">
+                <table id="Bud_Uses_Grid" style="width:100%">
+                    <tr>
+                        <th style="width:70%; font-weight:bold; text-align: center;">
+                            Budget Uses
+                        </th>
+                        <th  style="width: 10%; font-weight: bold; text-align: center;">
+                            Budget Amount 
+                        </th>
+                        <th  style="width: 10%; font-weight: bold; text-align: center;">
+                            Budget Type
+                        </th>
+                        <th  style="width:10%; text-align: center; font-weight: bold">
+                            Action
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model.Bud_us_list)
+                    {
+                        <tr>
+                            <td style="text-align: Left;">
+                                @Html.DisplayFor(modelItem => item.Utilization_Details)
+                            </td>
+                            <td style="text-align: center;">
+                                @Html.DisplayFor(modelItem => item.Budget_Amount)
+                            </td>
+                            <td style="text-align: center;">
+                                @Html.DisplayFor(modelItem => item.Budget_Type)
+                            </td>
+                            <td style="text-align: center;">
+
+                                @Html.ActionLink("Edit", "Edit_Budget_Uses", new { id = item.Budget_Uses_Id })                             
+                              
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#Budget_Year').change(function () {
+            $('#Budget_Head_Id').empty();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Budget_List", "Budget_Uses")",
+                datatype: "Json",
+                data: { Yearcode: $('#Budget_Year').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Budget_Head_Id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#Budget_Head_Id').change(function () {
+            $("#Bud_Uses_Grid tr").remove();
+
+            $.ajax({
+                type: "POST",
+                url:  "@Url.Action("Budget_Uses_List", "Budget_Uses")",
+                datatype: "Json",
+                data: { Bud_head_Id: $('#Budget_Head_Id').val() },
+                success: function (response) {
+                 
+                    markup = "<tr><th style='width: 60%;'> Budget Uses </th> <th style='width: 15%;'> Budget Amount  </th> <th style='width: 15%;'>Budget Type </th> <th style='width: 10%; text-align: center'>Action </th> </tr>";
+                    tableBody = $("#Bud_Uses_Grid tbody");
+                    tableBody.append(markup);
+
+                    if (response != null) {
+                        //$.each(response.Bud_Uses_List[i], function (Budget_Uses_Id, Budget_Name, Budget_Amount, Budget_Type ) {
+                        $.each(response, function (key, val) {
+                          
+                            var url = '@Url.Action("Edit_Budget_Uses", "Budget_Uses")' + '?id=' + val.budget_Uses_Id;
+
+                            markup = "<tr><td> " + val.utilization_Details + " </td> " +
+                                "<td> " + val.budget_Amount + " </td> " +
+                                "<td> " + val.budget_Type + " </td> " +
+                                "<td style=' text-align: center'>   <a href="+ url +"> Edit </a > </td></tr> "
+                            tableBody = $("#Bud_Uses_Grid tbody");
+                            tableBody.append(markup);
+                          
+                         
+                    });
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+
+            });
+
+        });
+    });
+
+</script>
+

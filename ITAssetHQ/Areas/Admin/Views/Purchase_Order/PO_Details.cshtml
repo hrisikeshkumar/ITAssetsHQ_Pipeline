@@ -1,0 +1,138 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model IList<Mod_POrder>
+
+
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+<style type="text/css">
+
+  .text {
+  display: block;
+  width: 600px;
+  overflow: hidden;
+  white-space: wrap;
+  text-overflow: ellipsis;
+}
+
+</style>
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <p style="font-size:large; font-weight:bold;">List of Purchase Order</p>
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="75%">
+
+                <div class="col-rt-3 equal-height">
+                    <div class="sb-example-3">
+                        <div class="search__container">
+                            <input class="search__input" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+            <td align="right" width="25%">
+                <h4>
+                    @Html.ActionLink("Add New", "PO_Create_Item", "Purchase_Order")
+
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table style="width:100%">
+                    <tr>
+                       
+                        <th style="width: 10%; font-weight: bold; text-align: left;">PO No.</th>
+                        <th style="width: 50%; font-weight: bold; text-align: left;">PO Details</th>
+                        <th style="width: 6%; font-weight: bold; text-align: center;">PO Exp Date</th>
+                        <th style="width: 6%; font-weight: bold; text-align: right;">PO Value</th>
+                        <th style="width: 9%; font-weight: bold; text-align: right;">Invoice Processed</th>
+                        <th style="width: 9%; font-weight: bold; text-align: right;">Amount Left</th>
+                        <th style="width: 5%; font-weight: bold; text-align: center;">Assets</th>
+                        <th style="width: 5%; font-weight: bold; text-align: center;">Action</th>
+
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="width: 10%; text-align: left; ">
+                                @Html.DisplayFor(modelItem => item.PO_No)
+                            </td>
+                            <td style="width: 50%;  text-align: left; ">
+                               <span class="text">  @Html.DisplayFor(modelItem => item.PO_Subject) </span>
+                            </td> 
+                            <td style="width: 6%; text-align: center; ">
+                                @Html.DisplayFor(modelItem => item.PO_End_Date)
+                            </td>
+                            <td style="width: 6%; text-align: right; ">
+                                @Html.DisplayFor(modelItem => item.PO_Value)
+                            </td>                           
+                             <td  style="width: 9%; text-align: right; ">
+                                 @Html.ActionLink(item.Invoice_Processed, "Admin_Dashboard", "Admin_Dashboard", new { Id = item.PO_id , type="PO" })
+                            </td>
+                            <td style="width: 9%; text-align: right; ">
+                                @Html.DisplayFor(modelItem => item.PO_Amount_Left)
+                            </td>
+                             <td  style="width: 6%; text-align: center; ">
+                                 @Html.ActionLink("View", "Item_Issue_Details", "Item_Issue", new { Id = item.PO_id , type="PO" })
+                            </td>
+                            <td  style="width: 6%; text-align: center; ">
+                                @Html.ActionLink("Edit", "Edit_PO", new { id = item.PO_id })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+

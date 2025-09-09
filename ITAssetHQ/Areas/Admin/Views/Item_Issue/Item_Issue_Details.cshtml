@@ -1,0 +1,517 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model ItemIssue_Mod
+
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Assets Location</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="60%">
+
+                <div class="col-rt-3 equal-height">
+                    <div class="sb-example-3">
+                        <div class="search__container">
+                            <input class="search__input" id="SL_Number" type="text" placeholder="Search  by Person Name or Serial Number">
+                        </div>
+                    </div>
+                </div>
+            </td>
+
+            <td align="right" width="40%">
+
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:80%;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 40%; text-align:center">
+                                        Purchase Order No
+                                    </td>
+                                    <td style="width: 50%; text-align:center">
+                                        <input id="Find_PO_id" width="100%" class="form-rounded" type="text" />
+                                    </td>
+                                    <td style="width: 10%; text-align:right">
+                                        <button type="submit" id="btn_Find_Invoice_By_PO" class="btn_download"> Search</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:20%; text-align:right">
+                            <h4>
+                                @Html.ActionLink("Change", "Item_Issue_Create_Item", "Item_Issue")
+                            </h4>
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table id="Bud_Uses_Grid" style="width:100%">
+
+                    <tr>
+                        <th style="width:10%;  text-align: left;">
+                            Item Type
+                        </th>
+                        <th style="width:10%; text-align: left;">
+                            Item Serial No.
+                        </th >
+                        <th style="width:15%; text-align: left;">
+                            Presently Issued
+                        </th>
+                        <th style="width:15%; text-align: left; height:25px;">
+                            Designation
+                        </th>
+                        <th style="width:15%; text-align: left; height:25px;">
+                            Department
+                        </th>
+                        <th style="width:20%; text-align: left;">
+                            Previously Issued
+                        </th>
+                        <th style="width:8%; text-align: left;">
+                            Issue Date
+                        </th>
+                        <th style="width:7%; text-align: center;">
+                            Document
+                        </th>
+                    </tr>
+
+
+                    @foreach (var item in Model.Item_Issues)
+                    {
+                        <tr>
+                            <td style="text-align:left;">
+                                @Html.DisplayFor(modelItem => item.Item_Type)
+                            </td>
+                            <td style="text-align:left;">
+
+                                <a href=""
+                                class=" " style="font-size:medium" data-toggle="modal" data-target="#myModal2" data-status="@item.Item_SerialNo" id="@item.Item_SerialNo">
+                                    @Html.DisplayFor(modelItem => item.Item_SerialNo)
+                                </a>
+
+                            </td>
+                            <td style="text-align:left;">
+                                @Html.DisplayFor(modelItem => item.Transfered_Emp_Name)
+                            </td>
+                            <td style="text-align:left;">
+                                @Html.DisplayFor(modelItem => item.Transfered_Emp_Designation)
+                            </td>
+                            <td style="text-align:left;">
+                                @Html.DisplayFor(modelItem => item.Transfered_Emp_Dept)
+                            </td>
+                            <td style="text-align:left;">
+                                @Html.DisplayFor(modelItem => item.Previous_Emp_Name)
+                            </td>
+                            <td style="text-align:left; ">
+                                @Html.DisplayFor(modelItem => item.Issued_date, "{0:dd/MM/yyyy}" )
+                            </td>
+                            <td style="text-align:center; height:25px;">
+                                @if (item.Issue_File_Id != "0")
+                                {
+                                    <input type='submit' style=" height:20px;" value='Download' class='btn_download IssueFile' id='@item.Issue_File_Id'>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+<script type="text/javascript">
+   
+
+     $(document).on("keyup", "#SL_Number", function (event) {
+      
+        $("#Find_PO_id").val("");
+        AsynchronousGridBinding ( $('#SL_Number').val(), "SerialNo_Wise" );
+
+     });
+
+
+     $(document).on("click", "#btn_Find_Invoice_By_PO", function (event) {
+
+        var pO_No =  $("#Find_PO_id").val();
+        AsynchronousGridBinding (pO_No , "PONo_Wise" );
+
+     });
+
+
+    function AsynchronousGridBinding (val, type)
+    {
+
+            $("#Bud_Uses_Grid tr").remove();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Search_Item", "Item_Issue")",
+                datatype: "Json",
+                data: { SearchVal: val, SearchType: type },
+                success: function (response) {
+
+                    markup = "<tr><th style='width: 10%; text-align:left; height:50px;'> Item Type </th> <th style='width: 10%; text-align:left;'>  Serial Number </th> <th style='width: 15%; text-align:left;'> Issued Employee </th> <th style='width: 15%; text-align:left;'> Designation </th> <th style='width: 15%; text-align:left;'> Department </th> <th style='width: 20%;'> Previous Employee </th>  <th style='width: 8%; text-align:left;'> Issued Date </th> <th style='width: 7%; '> Document </th>   </tr>";
+                    tableBody = $("#Bud_Uses_Grid tbody");
+                    tableBody.append(markup);
+
+                    if (response != null) {
+                        
+                        $.each(response, function (key, val) {
+
+                            const date = new Date(val.issued_date.substring(0, 10));
+                            const year = date.getFullYear();
+                            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                            const day = String(date.getDate()).padStart(2, '0');
+                            const formattedDate = `${day}-${month}-${year}`; // Output:
+
+                            markup = "<tr><td style='text-align: left;'> " + val.item_Type + " </td> " +
+                                "<td style='text-align: left;'>  <a href='' class='' style='font-size:medium' data-toggle='modal' data-target='#myModal2' data-status='"+ val.item_SerialNo + "' id='"+ val.item_SerialNo +"'  > " + val.item_SerialNo + " </a> </td> " +
+                                "<td style='text-align: left;'> " + val.transfered_Emp_Name + " </td> " +
+                                "<td style='text-align: left;'> " + val.transfered_Emp_Designation + " </td> " +
+                                "<td style='text-align: left;'> " + val.transfered_Emp_Dept + " </td> " +
+                                "<td style='text-align: left;'> " + val.previous_Emp_Name + " </td> " +
+                                "<td style='text-align: left; '> " + formattedDate + " </td> ";
+                                 if(val.issue_File_Id !=0)
+                                 {
+                                    markup= markup +  "<td style='text-align: center; height:25px;'>  <input type='submit' style='height:20px;' value='Download' class='btn_download IssueFile' id='"+ val.issue_File_Id +"'> </td> </tr> ";
+                                 }
+                                 else
+                                 {
+                                    markup= markup +  "<td> </td> </tr> ";
+                                 }
+                               
+
+                            tableBody = $("#Bud_Uses_Grid tbody");
+                            tableBody.append(markup);
+
+                        });
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+
+            });
+
+    }
+
+</script>
+
+
+@* -------------------------------------------------   Item details Info  -------------------------------------------*@
+
+@*-----------------------------Modal-------------------------------------*@
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<!--Modal quantity-->
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header badge-warning k-i-align-items-center-alt">
+                    <h4 style="font-weight:bold; ">
+                        Details Information of the Assets
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="align-content:center; text-align:center; align-items:center">
+                    <table style="width:100%; border-width:1px;">
+                        <tr>
+                            <td style="text-align:left; width:20%; background-color:moccasin ">
+                                Particular
+                            </td>
+                        <td style="text-align:center; width:70%; background-color:moccasin ">
+                                File Name
+                            </td>
+                            <td style="text-align:right; width:10%; background-color:moccasin ">
+                                Action
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;"  >
+                                Invoice
+                            </td>
+                            <td style="text-align:left;  ">
+                            @Html.TextBoxFor(x => x.itemInfo.Invoice_Info, new { @readonly = "True", @style = "border: 0px none; width:100%", @class = "FileClass" })
+                            </td>
+                            <td style="text-align:right; width:20%; ">
+                            <div class="btnShown btnInvoice">
+                                <input type='submit' value='Download' class='cssdownload btn_download' data-min="" FileType='Invoice' />
+                                </div>
+                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="height:10px;"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; "> P.O. </td>
+                            <td style="text-align:left;  ">
+                            @Html.TextBoxFor(x => x.itemInfo.PO_Info, new { @readonly = "True", @style = "border: 0px none; width:100%", @class = "FileClass" })
+                            </td>
+                        <td style="text-align:right; width:20%; " >
+                            <div class="btnShown btnPO">
+                                <input type='submit' value='Download' class='cssdownload btn_download' data-min="" FileType='PO' />
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="height:10px;"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; "> Approval </td>
+                            <td style="text-align:left;  ">
+                            @Html.TextBoxFor(x => x.itemInfo.Approval_Info, new { @readonly = "True", @style = "border: 0px none; width:100%", @class = "FileClass" })
+                            </td>
+                            <td style="text-align:right; width:20%; " >
+                            <div class="btnShown btnApproval">
+                                <input type='submit' value='Download' class='cssdownload btn_download' data-min="" FileType='Approval' />
+                                </div>
+                            </td>
+                        </tr>
+                </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                    
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#myModal2').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget) // Button that triggered the modal
+            var ItemInfo = button.data('status') // Extract info from data-* attributes
+
+            $("#Files_Grid tr").remove();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetDetails", "Item_Info")",
+                dataType: "json",
+                data: { serialno: ItemInfo },
+                success: function (response) {
+                    if (response != null) {
+
+                        $(".btnShown").addClass("hidediv");
+
+                        $('#itemInfo_Invoice_Info').val(response.invoice_Info);
+                        $('#itemInfo_PO_Info').val(response.pO_Info);
+                        $('#itemInfo_Approval_Info').val(response.approval_Info);
+                        
+                        if(response.invoice_Info !=null)
+                            $(".btnInvoice").removeClass("hidediv");
+
+                        if(response.pO_Info !=null)
+                            $(".btnPO").removeClass("hidediv");
+
+                        if(response.approval_Info !=null)
+                            $(".btnApproval").removeClass("hidediv");
+
+
+                            $(".cssdownload").attr('data-min',ItemInfo);
+                                             
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+@* --------------------------------------------Item File Download------------------------------------------------------------------ *@
+
+<script type="text/javascript">
+
+    $(document).on("click", ".cssdownload", function (event) {
+
+
+        var row = $(this).closest("tr");
+        var Filename = row.find('.FileClass').val();
+        var fileID = $(this).attr('data-min');
+        var File_Type = $(this).attr('FileType');
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download", "Item_Info")",
+            data: { SerialNo: fileID , FileType : File_Type  },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, Filename);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", Filename );
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+<style type="text/css">
+    .hidediv{
+        display: none;
+    }
+
+    .showdiv {
+        display: none;
+    }
+</style>
+
+@*--------------------------------------------Item Issue Download --------------------------------------------------------------*@
+
+
+
+<script type="text/javascript">
+
+    $(document).on("click", ".IssueFile", function (event) {
+
+        var fileID = $(this).attr('id');
+       
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download", "Item_Issue")",
+            data: { fileName: fileID },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileID);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileID);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+
+
+
+
+@* --------------------------------------------------------------------------------------------------------------------------------*@
+

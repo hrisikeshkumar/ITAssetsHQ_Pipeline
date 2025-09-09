@@ -1,0 +1,200 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model View_MOdel_QRCode
+
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Asset Service Information</p>
+
+</div>
+
+    <div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+        <table class=" table-hover table-striped shadow " style="width:100%">
+            
+            <tr>
+                  <td align="right" width="100%" Colspan="2">
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="width:100%;">
+                                @using (Html.BeginForm("AssetsInfo", "QRCode", FormMethod.Post))
+                                {
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="font-weight: Bold;  width: 10%; text-align:Left">
+                                                Asset Type
+                                            </td>
+                                            <td style="width: 30%; text-align:Left">
+                                               @Html.DropDownListFor(x => x.AssetType, Model.AssetTypeList, new { @class = " form-rounded", @style = " width :90%; " }) 
+                                            </td>
+                                             <td style="font-weight: Bold; width: 10%; text-align:Left">
+                                                Department
+                                            </td>
+                                            <td style="width: 30%; text-align:Left">
+                                                @Html.DropDownListFor(x => x.Department,  Model.DepartmentList, new { @class = " form-rounded", @style = " width :90%; " })
+                                            </td>
+                                            <td style="width: 20%; text-align:center">
+                                                <button class="button_cls form-rounded">Submit</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                 }
+                            </td>
+                            
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr> <td Colspan="2" style=" height: 15px;"> </td> </tr>
+           
+               @*  <td width="60%">
+
+                    <div class="col-rt-3 equal-height">
+                        <div class="sb-example-3">
+                            <div class="search__container">
+                                <input class="search__input" id="SL_Number" type="text" placeholder="Search  by Person Name or Serial Number">
+                            </div>
+                        </div>
+                    </div>
+                </td> *@
+
+  @using (Html.BeginForm("CodeGeneration", "QRCode", FormMethod.Post))
+  {
+              <tr>
+                <td Colspan="2">
+                     <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 60%; text-align:center">                                    
+                                    
+                            </td>
+                            <td style="width: 20%; text-align:center">                                    
+                                    <button class="button_cls form-rounded">Generate QR Code</button>
+                            </td>
+                                <td style="width: 20%; text-align:center">
+                                @Html.ActionLink("View All Issue", "All_Asset_Issue_Histroy", "QRCode", null, new { @class = "button_cls form-rounded", })
+                            </td>
+                        </tr>
+                    </table>       
+                </td>               
+            </tr>
+
+            
+            <tr>
+                <td colspan="2">
+                    <table id="AssetsGrid" style="width:100%">
+
+                        <tr>
+                             <th style="width:5%;  text-align: left;">
+                                
+                            </th>
+                            <th style="width:10%;  text-align: left;">
+                                Item Type
+                            </th>
+                            <th style="width:20%;  text-align: left;">
+                                Make - Model
+                            </th>
+                            <th style="width:10%; text-align: left;">
+                                Item Serial No.
+                            </th>
+                            <th style="width:15%; text-align: left;">
+                                Employee Name
+                            </th>
+                            <th style="width:15%; text-align: left; height:25px;">
+                                Designation
+                            </th>
+                            <th style="width:10%; text-align: left; height:25px;">
+                                Department
+                            </th>
+                            <th style="width:10%; text-align: center;">
+                                Raise Issue
+                            </th>     
+                             <th style="width:15%; text-align: center;">
+                                Info
+                            </th>    
+                        </tr>
+
+                        @foreach (var item in Model.QRCode)
+                        {
+                            <tr>
+                                <td style="text-align:left;">
+                                    <input type="checkbox" name="SelectAsset" id value="@item.Item_Id">
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => item.Asset_Type)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => item.Make)
+                                </td>
+                                <td style="text-align:left;">
+                                     @Html.TextBoxFor(modelItem => item.Asset_SerialNo, new { @class = "", @style = " background: transparent; width :80%; border: 0px none; " })
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => item.Designation)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => item.Department)
+                                </td>
+                                <td style="text-align:center;">
+                                     @Html.ActionLink("Raise Issue", "RaiseIssue", "QRCode",  new { Id = item.Item_Id, type="New" }, new {@class = " form-rounded"})
+                                </td>
+                                <td style="text-align:center;">
+                                     @Html.ActionLink("View", "Asset_Info_Histroy", "QRCode",  new { id = item.Item_Id })
+                                </td>
+                                
+                            </tr>
+                        }
+                    </table>
+
+                </td>
+
+            </tr>
+  }
+        </table>
+    </div>
+
+
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+

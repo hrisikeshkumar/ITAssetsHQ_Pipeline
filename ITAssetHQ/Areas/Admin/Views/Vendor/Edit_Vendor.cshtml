@@ -1,0 +1,320 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Vendor
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Edit Vendor Data</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Update_Vendor", "Vendor", FormMethod.Post))
+    {
+
+        @Html.AntiForgeryToken()
+        
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Vendor Name
+                    @Html.HiddenFor(x => x.Vendor_id)
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.Vendor_name, new { @class = " form-rounded", @style = " width :40%; " })
+                    <i id="IconVendor_name" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Vendor Address
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.Vendor_Addr, new { @class = " form-rounded", @style = " width :80%; " })
+                    <i id="IconVendor_Addr" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+            </tr>
+            <tr><td colspan="3" style="height:10px;"></td></tr>
+       
+
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :80%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button name="btnSave" id="btnSave" class="button_cls form-rounded">Submit</button>
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Vendor_Details", "Vendor", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+<script src="~/js/Validation/jquery.validate.js"></script>
+<script src="~/js/Validation/jquery.validate.min.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.min.js"></script>
+
+
+<style type="text/css">
+    .valid {
+        visibility: hidden;
+    }
+
+    .invalid {
+        visibility: visible;
+    }
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSave').click(function () {
+            var Vendr_Name, Vendr_Addr
+            Vendr_Name = $("#Vendor_name");
+            Vendr_Addr = $("#Vendor_Addr");
+
+
+            if (Vendr_Name.val() == '') {
+                $("#IconVendor_name").addClass("invalid")
+                $("#IconVendor_name").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconVendor_name").addClass("valid")
+                $("#IconVendor_name").removeClass("invalid")
+            }
+
+
+            if (Vendr_Addr.val() == '') {
+                $("#IconVendr_Addr").addClass("invalid")
+                $("#IconVendr_Addr").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconVendr_Addr").addClass("valid")
+                $("#IconVendr_Addr").removeClass("invalid")
+            }
+
+
+
+        });
+    });
+</script>
+
+
+
+
+
+
+
+@*------------------------------------ File Function--------------------------------------------------------------*@
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#btnFileUpload').click(function (event) {
+
+
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#FileUpload_Id").get(0);
+                var files = fileUpload.files;
+
+                var fileRefId = $("#Vendor_id").val();
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                fileData.append('SLA_Id', fileRefId);
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("FiliUpload", "Vendor")",
+                    datatype: "Json",
+                    data: fileData,
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    success: function (response) {
+
+                        $("#Files_Grid tr").remove();
+
+                        markup = "<tr><th style='width: 50%;'> File Name </th> <th style='width: 25%;'> Download </th> <th style='width: 25%; text-align: center'> Delete </th> </tr>";
+                        tableBody = $("#Files_Grid tbody");
+                        tableBody.append(markup);
+
+
+                        if (response != null) {
+
+                            $.each(response, function (key, val) {
+
+                                markup = "<tr><td> " + val.File_Name + " </td> " +
+                                    "<td>  <input type='submit' value='Download' class='cssdownload btn_download' id='" + val.File_Id + "' > </input> </td> " +
+                                    "<td style=' text-align: center'>  <input type='submit' class='appDetails btn_delete' id='" + val.File_Id + "' value='Delete' > </input> </td></tr> "
+
+                                tableBody = $("#Files_Grid tbody");
+                                tableBody.append(markup);
+
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+
+                });
+            }
+
+            event.preventDefault();
+
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $(document).on("click", ".appDetails", function () {
+            var clickedBtnID = $(this).attr('id');
+
+            var fileRefId = $("#Vendor_id").val();
+
+            if (confirm('Are you sure you want to delete this?')) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteFile", "Vendor")",
+                    datatype: "Json",
+                    data: { FileId: clickedBtnID, RefId: fileRefId },
+                    success: function (response) {
+
+
+                        $("#Files_Grid tr").remove();
+
+                        markup = "<tr><th style='width: 50%;'> File Name </th> <th style='width: 25%;'> Download </th> <th style='width: 25%; text-align: center'> Delete </th> </tr>";
+                        tableBody = $("#Files_Grid tbody");
+                        tableBody.append(markup);
+
+
+                        if (response != null) {
+
+                            $.each(response, function (key, val) {
+
+                                markup = "<tr><td> " + val.File_Name + " </td> " +
+                                    "<td>  <input type='submit' value='Download' class='cssdownload btn_download' id='" + val.File_Id + "' > </input> </td> " +
+                                    "<td style=' text-align: center'>  <input type='submit' class='appDetails btn_delete' id='" + val.File_Id + "' value='Delete' > </input> </td></tr> "
+
+                                tableBody = $("#Files_Grid tbody");
+                                tableBody.append(markup);
+
+                            });
+                        }
+
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+
+                });
+
+            }
+
+            event.preventDefault();
+
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).on("click", ".cssdownload", function () {
+        var fileName = $(this).attr('id');
+
+
+        window.location.href = "/Admin/Vendor/Download?fileId=" + fileName + "";
+
+
+        event.preventDefault();
+    });
+
+
+
+</script>
+
+
+@*---------------------------------------------------------------------------------------------------------------*@
+
+
+
+
+
+
+
+
+
+
+

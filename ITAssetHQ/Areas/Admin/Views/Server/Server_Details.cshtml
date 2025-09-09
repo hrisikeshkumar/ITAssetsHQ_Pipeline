@@ -1,0 +1,155 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model IList<Mod_Server>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">List of Server</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="75%">
+
+                <div class="col-rt-3 equal-height">
+                    <div class="sb-example-3">
+                        <!-- partial:index.partial.html -->
+                        <div class="search__container">
+
+                            <input class="search__input" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+
+            </td>
+            <td align="right" width="25%">
+                <h4>
+                    @Html.ActionLink("Add New", "Server_Create_Item", "Server")
+
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+
+                <table style="width:100%">
+                    <tr>
+                        <th>
+                            Make
+                        </th>
+                        <th>
+                            model
+                        </th>
+                        <th>
+                            Serial No
+                        </th>
+                        <th>
+                            Proc Date
+                        </th>
+                        <th>
+                            Warranty Date
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            PO No
+                        </th>
+                        <th>
+                            PO Date
+                        </th>
+                        <th> Action </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Make_Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Model_Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Item_serial_No)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Proc_date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Warnt_end_dt)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Asset_Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PO_No)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PO_Date)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit_Server", new { id = item.Item_id })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+

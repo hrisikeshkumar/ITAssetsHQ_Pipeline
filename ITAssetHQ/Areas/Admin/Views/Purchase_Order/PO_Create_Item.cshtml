@@ -1,0 +1,350 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_POrder
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Enter New Purchase Order</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("PO_Create_Post", "Purchase_Order", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class=" table-hover table-striped shadow " style="width:100%">
+            <tr>
+                <td style="width:25%; ">
+                    P.O. No.
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.PO_No, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:25%;">
+                    P.O. Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.PO_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%; ">
+                    Subject
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.PO_Subject, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+              
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    P.O. Start Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.PO_ST_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:25%; height:50px;">
+                    P.O Expiary Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.PO_End_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Vendor Name
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.DropDownListFor(x => x.Vendor_id, Model.Vendor_List, new { @class = " form-rounded", @style = " width :70%; " })
+                </td>         
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Approval Details
+                </td>
+                <td style="width:75%;" colspan="3">
+
+                    <table style="width:100%">
+                        <tr>
+                            <td>
+                                <table id="tbl_ApprovalList" name="tbl_ApprovalList" style="width:100%; border: 1px solid black;">
+                                    <thead>
+                                        <tr>
+                                            <td style="width:0%; display:none;">
+                                                Proposal Id
+                                            </td>
+                                            <td style="width:80%">
+                                                Proposal Details
+                                            </td>
+                                            <td style="width:20%">
+                                                Action
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td style="width:0%; display:none;">
+                                            @Html.HiddenFor(x => x.Proposal_Id)
+                                        </td>
+                                        <td style="width:90%">
+                                            @Html.TextAreaFor(x => x.Approval_Details, new { @rows = "2", @style = " width :95%; " })
+                                        </td>
+                                        <td style="width:10%">
+                                            <input type='submit' value='Add' class='cssdownload btn_delete' id='btn_Approval_Add'>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>                           
+                        </tr>
+                    </table>
+                    
+                </td>
+            </tr>         
+            <tr>
+                <td style="width: 25%; height: 50px;">
+                    Upload Purchase Order
+                </td>
+                <td style="width:75%;" colspan="3">
+                    <input id="File_PO" type="file"
+                           name="File_PO" />  Only PDF files are accepted.
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    P.O. Value
+                </td>
+                <td colspan="2" style="width:50%;">
+                    @Html.TextBoxFor(x => x.PO_Value, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:25%; height:50px;">
+                    <table>
+                        <tr>
+                            <td style="text-align:left">
+                                In Active 
+                            </td>
+                            <td style="text-align:left">
+                                @Html.CheckBoxFor(model => model.InActive, new { @class = " form-rounded", @style = " width :60%; " })
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @rows = "2", @style = " width :96%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button id="btnSave" class="button_cls form-rounded">Submit</button>
+                </td>
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "PO_Details", "Purchase_Order", null, new { @class = "button_cls form-rounded", })
+                </td>
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+    }
+
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            alert("@TempData["Message"]");
+        };
+    </script>
+
+}
+
+
+@* //---------------------------------------  Auto Complete  --------------------------------------------------------------------------- *@
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $('#Approval_Details').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "@Url.Action("AutoComplete", "Purchase_Order")",
+                data: {SL_No: request.term},
+                dataType: "json",
+                type: "POST",
+                // contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return   item.item_Id + '--' + item.item_SL_Number ;
+
+                    }))
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    console.log('some error occured', textStatus, errorThrown);
+                }
+            });
+        },
+        minLength: 1,
+        select: function (event, ui) {
+            
+            $('#Proposal_Id').val(ui.item.label.split('--')[0]);
+            $('#Approval_Details').val(ui.item.value.split('--')[1]);
+
+            return false;
+        }
+    });
+</script>
+
+@* //----------------------------------------------------- Approval Details ----------------------------------------------------------------- *@
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        let rowIndex = 0;
+
+        $("#btn_Approval_Add").click(function (event) {
+            event.preventDefault();
+
+            const proposalId = $('#Proposal_Id').val();
+            const proposalDetails = $('#Approval_Details').val();
+
+            const newRow = `
+                <tr>
+                    <td style="width:0%; display:none;">
+                        <input type="hidden"   name="ApprovalList[${rowIndex}].Proposal_ID" value="${proposalId}" />
+                        ${proposalId}
+                    </td>
+                    <td style="width:90%;">
+                        <input type="text" readonly style="width:95%;" name="ApprovalList[${rowIndex}].Proposal_Details" value="${proposalDetails}" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn_delete btn_deleterow">Delete</button>
+                    </td>
+                </tr>
+            `;
+
+            $('#tbl_ApprovalList tbody').append(newRow);
+            rowIndex++;
+
+            // Clear input fields
+            $('#Proposal_Id').val('');
+            $('#Approval_Details').val('');
+        });
+    });
+
+
+    $(document).on('click', '.btn_deleterow', function () {
+        $(this).closest('tr').remove();
+        reindexApprovalRows(); // Recalculate indices after deletion
+    });
+
+
+
+    function reindexApprovalRows() {
+        $('#tbl_ApprovalList tbody tr').each(function (index) {
+            $(this).find('input[name^="ApprovalList"]').each(function () {
+                const name = $(this).attr('name');
+                const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                $(this).attr('name', newName);
+            });
+        });
+    }
+
+
+</script>
+
+
+
+@* 
+<script type="text/javascript">
+    // $("body").on("click", "#btnSave", function (event) {
+    //     //Loop through the Table rows and build a JSON array.
+    //     ///event.preventDefault();
+    //     var Approval_List = [];
+    //     $("#tbl_ApprovalList TBODY TR").each(function () {
+    //         var row = $(this);
+    //         var Approval = {};
+    //         Approval.Proposal_ID = row.find("TD").eq(0).find("input").val();
+    //         Approval.Proposal_Details = row.find("TD").eq(1).find("input").val();
+    //         Approval_List.push(Approval);
+    //     });
+
+    //     var PO_No = $("#PO_No").val();
+    //     var PO_Date = $("#PO_Date").val();
+    //     var Vendor_id = $("#Vendor_id").val();
+    //     var PO_Value = $("#PO_Value").val();
+    //     var PO_ST_Date = $("#PO_ST_Date").val();
+    //     var PO_End_Date = $("#PO_End_Date").val();
+    //     var PO_Subject = $("#PO_Subject").val();
+    //     var SLA_Required = $("#QuoteSubject").val();
+    //     var Remarks = $("#Remarks").val();
+
+    //     var formData = new FormData();
+    //     formData.append("PO_No", PO_No);
+    //     formData.append("Vendor_id", Vendor_id);
+    //     formData.append("PO_Date", PO_Date);
+    //     formData.append("PO_Value", PO_Value);
+    //     formData.append("PO_ST_Date", PO_ST_Date);
+    //     formData.append("PO_End_Date", PO_End_Date);
+    //     formData.append("PO_Subject", PO_Subject);
+    //     formData.append("SLA_Required", SLA_Required);        
+    //     formData.append("Remarks", Remarks);
+
+
+    //     var fileInput = $("#File_PO")[0];
+    //     if (fileInput.files.length > 0) {
+    //         formData.append("File_PO", fileInput.files[0]);
+    //     }
+
+
+    //     Approval_List.forEach(function (Approval, index) {
+    //         formData.append(`ApprovalList[${index}].Proposal_ID`, Approval.Proposal_ID);
+    //         formData.append(`ApprovalList[${index}].Proposal_Details`, Approval.Proposal_Details);
+    //     });
+
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "@Url.Action("PO_Create_Post", "Purchase_Order")",
+    //         data: formData,
+    //         contentType: false,
+    //         processData: false,
+    //         cache: false,
+    //         success: function (r) {
+    //             alert(r);
+
+    //         }
+    //     });
+
+
+    // });
+</script>
+
+ *@
+

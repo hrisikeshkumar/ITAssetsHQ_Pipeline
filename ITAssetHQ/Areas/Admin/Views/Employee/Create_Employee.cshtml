@@ -1,0 +1,298 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Employee
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Enter New Employee</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Employee_Create_Post", "Employee", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:20%; height:50px;">
+                    Employee Code
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Emp_Code, new { @class = " form-rounded", @style = " width :50%; " })
+                </td>
+                <td style="width:20%;">
+                    Employee  Name
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Emp_Name, new { @class = " form-rounded", @style = " width :90%; " })
+                    <i id="IconEmp_Name" class="valid fa fa-question-circle" style="font-size:24px;color:red"  ></i>
+                </td>
+            </tr>
+            <tr>
+
+                <td style="width:20%;">
+                    Employee Type
+                </td>
+                <td style="width:30%;">
+
+                    @Html.DropDownListFor(x => x.Emp_Type, Model.Emp_Type_List, "Please select", new { @class = " form-rounded", @style = " width :90%; " })
+                    <i id="IconEmp_Type" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+
+                </td>
+
+                <td style="width:20%;">
+                    Employee  Designation
+                </td>
+                <td style="width:30%;">
+
+                    @Html.DropDownListFor(x => x.Emp_Designation, new SelectList(string.Empty, "Value", "Text"), "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+                    <i id="IconEmp_Designation" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+
+            </tr>
+
+
+            <tr>
+                <td style="width:20%;">
+                    Department
+                </td>
+                <td style="width:30%;">
+
+                    @Html.DropDownListFor(x => x.Emp_Dept, Model.Dept_List, "Please select", new { @class = " form-rounded", @style = " width :90%; " })
+                    <i id="IconEmp_Dept" class="valid fa fa-question-circle" style="font-size:24px;color:red"></i>
+                </td>
+
+                <td style="width:20%;">
+                    Location
+                </td>
+
+
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Location, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+
+            </tr>
+
+
+            <tr>
+                <td style="width:20%;">
+                    Remarks
+                </td>
+                <td style="width:80%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:20%; "></td>
+
+                <td style="width: 30%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button name="btnSave" id="btnSave" class="button_cls form-rounded">Submit</button>
+
+                </td>
+
+                <td style="width: 20%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Employee_Details", "Employee", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:30%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+
+<script src="~/js/Validation/jquery.validate.js"></script>
+<script src="~/js/Validation/jquery.validate.min.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.js"></script>
+<script src="~/js/Validation/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script type="text/javascript">
+    $(function () {
+        //$.ajax({
+        //    type: "GET",
+        //    url: "/home/GetCategories",
+        //    datatype: "Json",
+        //    success: function (data) {
+        //        $.each(data, function (index, value) {
+        //            $('#dropdownCategory').append('<option value="' + value.CategoryID + '">' + value.CategoryName + '</option>');
+        //        });
+        //    }
+        //});
+
+        $('#Emp_Type').change(function () {
+            $('#Emp_Designation').empty();
+
+            $.ajax({
+                type: "POST",
+                url:  "@Url.Action("Get_Designation", "Employee")",
+                datatype: "Json",
+                data: { Emp_Type: $('#Emp_Type').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Emp_Designation').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSave').click(function () {
+            var Emp_Name, Emp_Type, Emp_Designation, Emp_Dept, EmailId, emailExp;
+            Emp_Name = $("#Emp_Name").val();
+            Emp_Type = $("#Emp_Type").val();
+            Emp_Designation = $("#Emp_Designation").val();
+            Emp_Dept = $("#Emp_Dept").val();
+
+            if (Emp_Name == '') {
+                //alert("Please Enter Employee Name");
+                $("#Emp_Name").focus();
+                $("#IconEmp_Name").addClass("invalid")
+                $("#IconEmp_Name").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconEmp_Name").addClass("valid")
+                $("#IconEmp_Name").removeClass("invalid")
+            }
+            if (Emp_Type == null || Emp_Type < 1 ) {
+                $("#IconEmp_Type").addClass("invalid")
+                $("#IconEmp_Type").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconEmp_Type").addClass("valid")
+                $("#IconEmp_Type").removeClass("invalid")
+            }
+            if (Emp_Designation == null || Emp_Designation < 1 ) {
+                $("#IconEmp_Designation").addClass("invalid")
+                $("#IconEmp_Designation").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconEmp_Designation").addClass("valid")
+                $("#IconEmp_Designation").removeClass("invalid")
+            }
+            if (Emp_Dept == null || Emp_Dept < 1 ) {
+                $("#IconEmp_Dept").addClass("invalid")
+                $("#IconEmp_Dept").removeClass("valid")
+                return false;
+            }
+            else {
+                $("#IconEmp_Dept").addClass("valid")
+                $("#IconEmp_Dept").removeClass("invalid")
+            }
+
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#Emp_Name').focusout(function () {
+            if ($('#Emp_Name').val() == '') {
+                $("#IconEmp_Name").addClass("invalid")
+                $("#IconEmp_Name").removeClass("valid")
+               
+            }
+            else {
+                $("#IconEmp_Name").addClass("valid")
+                $("#IconEmp_Name").removeClass("invalid")
+            }
+        });
+
+        $('#Emp_Type').focusout(function () {
+            var Emp_Type = $('#Emp_Type').val();
+            if (Emp_Type == null || Emp_Type < 1) {
+                $("#IconEmp_Type").addClass("invalid")
+                $("#IconEmp_Type").removeClass("valid")
+
+            }
+            else {
+                $("#IconEmp_Type").addClass("valid")
+                $("#IconEmp_Type").removeClass("invalid")
+            }
+        });
+
+        $('#Emp_Designation').focusout(function () {
+            var Emp_Designation= $('#Emp_Designation').val();
+            if (Emp_Designation == null || Emp_Designation < 1) {
+                $("#IconEmp_Designation").addClass("invalid")
+                $("#IconEmp_Designation").removeClass("valid")
+                
+            }
+            else {
+                $("#IconEmp_Designation").addClass("valid")
+                $("#IconEmp_Designation").removeClass("invalid")
+            }
+        });
+
+
+        $('#Emp_Dept').focusout(function () {
+            var Emp_Dept = $('#Emp_Dept').val();
+            if (Emp_Dept == null || Emp_Dept < 1) {
+                $("#IconEmp_Dept").addClass("invalid")
+                $("#IconEmp_Dept").removeClass("valid")
+                
+            }
+            else {
+                $("#IconEmp_Dept").addClass("valid")
+                $("#IconEmp_Dept").removeClass("invalid")
+            }
+
+        });
+
+
+    });
+
+</script>
+
+

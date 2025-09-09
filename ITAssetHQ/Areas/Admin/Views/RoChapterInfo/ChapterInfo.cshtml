@@ -1,0 +1,197 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+@model RoChapterInfo_Mod
+
+@{
+    ViewBag.Title = "Index";
+}
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<div style="text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <p style="font-size:large; font-weight:bold;">Chapter IT Assets Information</p>
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td>
+                @using(Html.BeginForm("ChapterInfo", "RoChapterInfo", FormMethod.Post))
+                {
+                    <table style="width: 100%">
+                        <tr>
+                            <td width="75%">
+                                <div class="col-rt-3 equal-height">
+                                    <div class="sb-example-3">
+                                        Office Name:
+
+                                        @Html.DropDownListFor(x => x.ChapterName, Model.ChapterList, new { @class = " form-rounded", @style = " width :60%; " })
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td align="center" width="25%">
+                                <h4>
+                                    <button class="button_cls form-rounded">Submit</button>
+                                </h4>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width:100%">
+                    <tr>
+                        <th width="7%" align="left"> Asset Type </th>
+                        <th width="10%" align="left"> Model </th>
+                        <th width="7%" align="left"> Serial No </th>
+                        <th width="7%" align="left" style="padding-left:1px"> Invoice </th>
+                        <th width="7%" align="left" style="padding-left:1px"> ProcDate </th>
+                        <th width="7%" align="center" style="align-items:center"> Price </th>
+                        <th width="7%" align="left" style="padding-left:1px"> Fund  </th>
+                        <th width="12%" align="center"> Sanction Order </th>
+                        <th width="12%" align="center"> Approval </th>
+                        <th width="12%" align="center"> Invoice </th>
+                        <th width="12%" align="center"> Quotations</th>
+                    </tr>
+
+                    @foreach (var item in Model.chapterDetail)
+                    {
+                        <tr>
+                            <td width="7%" align="left">
+                                @Html.DisplayFor(modelItem => item.AssetType)
+                                @Html.HiddenFor(modelItem => item.ItemId)
+                            </td>
+                            <td width="10%" align="left">
+                                @Html.DisplayFor(modelItem => item.Model)
+                            </td>
+                            <td width="7%" align="left">
+                                @Html.DisplayFor(modelItem => item.SerialNo)
+                            </td>
+                            <td width="7%" align="left" style="padding-left:1px">
+                                @Html.DisplayFor(modelItem => item.Inv_No)
+                            </td>
+                            <td width="7%" align="left" style="padding-left:1px">
+                                @Html.DisplayFor(modelItem => item.ProcDate)
+                            </td>
+                            <td width="7%" align="right">
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td width="7%" align="left" style="padding-left:1px>
+                                @Html.DisplayFor(modelItem => item.FundSource)
+                            </td>
+                            <td width="12%" align="center">
+                                <a href="#" id="fileDnld" onclick="DownloadFile('@item.SOFile', 'SanctionOrderDownload/')"> Downlaod </a>
+                            </td>
+                            <td width="12%" align="center">
+                                <a href="#" id="fileDnld" onclick="DownloadFile('@item.ApprovalFile', 'ApprovalDownload/')"> Downlaod </a>
+                            </td>
+                            <td width="12%" align="center">
+                                <a href="#" id="fileDnld" onclick="DownloadFile('@item.InvFile', 'InvoiceDownload/')"> Downlaod </a>
+                            </td>
+                            <td width="12%" align="center">
+                                @foreach (var file in item.QuoteFiles)
+                                {
+                                    <a href="#" id="fileDnld" onclick="DownloadFile('@file', 'QuotationDownload/')"> Downlaod </a>
+                                    <br>
+                                }       
+                            </td>                                                   
+                        </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            /**/
+            alert("@TempData["Message"]");
+        /**/
+        };
+    </script>
+}
+
+
+
+<script type="text/javascript">
+
+    function DownloadFile(file_Name, urlinfo) {
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Chapters/RoChapterInfo/" + urlinfo,
+            data: { fileName: file_Name },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, file_Name);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", file_Name);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+    };
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+

@@ -1,0 +1,174 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_add_To_Amc
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Add @Model.Asset_Types To Amc</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Shift_Warnty_To_Amc", "IT_Hardware_AMC", FormMethod.Post))
+    {
+
+    <table class=" table-hover table-striped shadow " style="width:100%">
+
+        <tr>
+            <td style="width:25%; height:50px;">
+                Asset Types
+            </td>
+            <td style="width:25%;">
+
+                @Html.DisplayFor(x => x.Asset_Types, new { @class = " form-rounded", @style = " width :90%; " })
+            </td>
+            <td style="width:25%;">
+                Asset Serial Number
+            </td>
+            <td style="width:25%;">
+
+                @Html.TextBoxFor(x => x.SL_Number, new { @class = " form-rounded", @style = " width :90%; " })
+
+            </td>
+        </tr>
+        <tr>
+            <td style="width:25%;">
+                Select Vendor 
+            </td>
+            <td style="width:25%;" colspan="3">
+
+                @Html.DropDownListFor(x => x.Vendor_List, Model.Vendor_List, "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+            </td>
+
+        </tr>
+
+        <tr>
+            <td style="width:25%;">
+                AMC Start Date
+            </td>
+            <td style="width:25%;">
+
+
+                    @Html.TextBoxFor(x => x.AMC_Start_DT, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded", @style = " width :90%; " })
+            </td>
+
+            <td style="width:25%;">
+                AMC End Date
+            </td>
+            <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.AMC_End_DT, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded", @style = " width :90%; " })
+            </td>
+
+        </tr>
+
+
+        <tr>
+            <td style="width:25%;">
+                Remarks
+            </td>
+            <td style="width:25%;" colspan="3">
+
+
+                @Html.TextAreaFor(x => x.Remarks, new { @class = "dateclass form-rounded", @style = " width :90%; " })
+            </td>
+
+            
+
+        </tr>
+
+
+        <tr>
+            <td style="width:100%; height:10px;" colspan="4">
+            </td>
+        </tr>
+        <tr style=" height: 50px; ">
+            <td align="left" style="width:25%; "></td>
+
+            <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                <button class="button_cls form-rounded">Submit</button>
+
+            </td>
+
+            <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                @Html.ActionLink("Back", "Find_Warranty_Expired", "IT_Hardware_AMC", null, new { @class = "button_cls form-rounded", })
+            </td>
+
+            <td align="left" style="width:25%;"></td>
+        </tr>
+    </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        //$.ajax({
+        //    type: "GET",
+        //    url: "/home/GetCategories",
+        //    datatype: "Json",
+        //    success: function (data) {
+        //        $.each(data, function (index, value) {
+        //            $('#dropdownCategory').append('<option value="' + value.CategoryID + '">' + value.CategoryName + '</option>');
+        //        });
+        //    }
+        //});
+
+
+        $('#Item_Make_id').change(function () {
+            $('#Item_Model_id').empty();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Model_List", "DC_MisItems")",
+                datatype: "Json",
+                data: { Item_Make: $('#Item_Make_id').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Item_Model_id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+</script>
+
+
+

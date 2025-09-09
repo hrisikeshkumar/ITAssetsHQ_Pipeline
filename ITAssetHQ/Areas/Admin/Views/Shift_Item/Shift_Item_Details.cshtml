@@ -1,0 +1,115 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+
+@model IList<Mod_Shift_Item>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">List of Shifted Item</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="75%">
+
+                <div class="col-rt-3 equal-height">
+                    <div class="sb-example-3">
+                        <!-- partial:index.partial.html -->
+                        <div class="search__container">
+
+                            <input class="search__input" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+
+            </td>
+            <td align="right" width="25%">
+                <h4>
+                    @Html.ActionLink("Add New", "Shift_Item_Create_Item", "Shift_Item")
+
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table style="width:100%">
+                    <tr>
+                        <th>
+                            Item Type
+                        </th>
+                        <th>
+                            Shift From
+                        </th>
+                        <th>
+                            Shift To
+                        </th>
+                        <th>
+                            Shifted Date
+                        </th>
+                        <th> Action </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item_Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Present_Company)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Shifted_Company)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Shift_date)
+                    </td>
+                    <td>
+
+                        @Html.ActionLink("Details", "Get_Detail", new { id = item.Item_Shift_Id }) |
+                        @Html.ActionLink("Delete", "Delete_Shift_Item", new { id = item.Item_Shift_Id })
+
+                    </td>
+                </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+

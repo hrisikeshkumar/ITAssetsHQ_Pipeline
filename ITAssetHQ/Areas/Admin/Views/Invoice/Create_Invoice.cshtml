@@ -1,0 +1,167 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Invoice_Mod
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+<script src="~/js/commonjs.js"></script>
+
+
+<div style=" text-align: center; align-content: center; width: 100% " class=" h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:400;">New Invoice</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class=" h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Invoice_Create_Post", "Invoice", FormMethod.Post, new { encType = "multipart/form-data" }))
+    {
+        <table class=" table-hover table-striped shadow " style="width:100%">
+            <tr>
+                <td style="width:20%; ">
+                    Invoice No.
+                    @Html.HiddenFor(x => x.Invoice_id)
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Invoice_No, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:20%;">
+                    Invoice Date
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Invoice_Date, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:20%; ">
+                    Subject
+                </td>
+                <td style="width:80%;" colspan="3">
+                    @Html.TextAreaFor(x => x.Invoice_Subject, new { @rows = "2", @style = " width :95%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:20%; height:50px;">
+                    Purchase Order
+                </td>
+                <td style="width:80%;" colspan="3">
+                    @Html.DropDownListFor(x => x.PO_Id, Model.PO_list, new { @class = "form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:20%; height:50px;">
+                    Invoice Value
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Invoice_Value, new { @class = "form-rounded", @style = " width :90%; " })
+                </td>
+
+                <td style="width:20%; height:50px;">
+                    Penalty Amount
+                </td>
+                <td style="width:30%;">
+                    @Html.TextBoxFor(x => x.Penalty_Amount, new { @class = " form-rounded", @style = " width :95%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:20%;">
+                    Penalty Reason
+                </td>
+                <td style="width:80%;" colspan="3">
+                    @Html.TextAreaFor(x => x.Penalty_Reason, new { @rows = "2", @style = " width :96%; " })
+                </td>
+            </tr>
+
+            <tr>
+               
+
+                <td style=" height:50px;">
+                    Invoice File
+                </td>
+                <td  colspan="3">
+                    @Html.TextBoxFor(model => model.File_Invoice, "", new { @type = "file" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @rows = "2", @style = " width :96%; " })
+                </td>
+            </tr>
+         
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+                </td>
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "List_Invoice", "Invoice", null, new { @class = "button_cls form-rounded", })
+                </td>
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            /**/
+            alert("@TempData["Message"]");
+            /**/
+        };
+    </script>
+
+}
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#Fin_Year').change(function () {
+            $('#Budget_Id').empty();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Bud_Head_List", "Invoice")",
+                datatype: "Json",
+                data: { Fin_Year: $('#Fin_Year').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Budget_Id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+</script>
+
+
+
+
+

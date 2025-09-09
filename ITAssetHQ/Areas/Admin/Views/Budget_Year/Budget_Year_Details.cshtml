@@ -1,0 +1,136 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_Budget_Year
+
+@{
+    ViewBag.Title = "Budget_Year_Data";
+}
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">List of Budget Years</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="75%">
+
+                <div class="col-rt-3 equal-height">
+                    <div class="sb-example-3">
+                        <!-- partial:index.partial.html -->
+                        <div class="search__container">
+
+                            <input class="search__input" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+
+            </td>
+            <td align="right" width="25%">
+                <h4>
+                    @Html.ActionLink("Back", "Admin_Dashboard", "Admin_Dashboard")
+
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+
+                @using (Html.BeginForm("Budget_Year_Insert", "Budget_Year", FormMethod.Post))
+                {
+
+
+                    <table style="width:100%">
+                        <tr>
+                            <th>
+                                Budget Year
+                            </th>
+                            <th>
+                                Active Budget Year
+                            </th>
+                            <th> Action </th>
+                        </tr>
+
+                        @foreach (var item in Model.List_Bud_Year)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Bud_Year)
+                                </td>
+                                <td>
+                                    @Html.CheckBoxFor(modelItem => item.default_Bud)
+                                </td>
+                                <td>
+
+                                    @Html.ActionLink("Delete", "Budget_Year_Update", new { Bud_Id = item.Bud_Id })
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                @Html.TextBoxFor(x => x.Bud_Year, new { @style = "width:90%;", @class = "form-rounded" })
+                            </td>
+                            <td>
+                                @Html.CheckBoxFor(x => x.default_Bud)
+                            </td>
+                            <td>
+
+                                <button class="button_cls form-rounded">Submit</button>
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                }
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+<script type="text/javascript">
+    function ShowSuccessMsg() {
+        toastr.success("Successfully Added.");
+    };
+    function ShowFailure(Msg) {
+        toastr.error("Error:" + Msg);
+    };
+</script>
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
+
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        alert("@TempData["Message"]");
+    };
+    </script>
+
+}
+

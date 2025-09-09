@@ -1,0 +1,913 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+@model Mod_Admin_dashB
+
+<title>@ViewBag.Title = "Admin_Dashboard";</title>
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<link href="~/css/pagination.css" rel="stylesheet" />
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+
+<style type="text/css">
+
+    .hidetable {
+        display: none;
+    }
+
+
+    .btn_download {
+        display: inline-block;
+        outline: 0;
+        cursor: pointer;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-weight: 300;
+        line-height: 10px;
+        vertical-align: middle;
+        border: 1px solid;
+        border-radius: 6px;
+        color: #ffffff;
+        background-color: #2ea44f;
+        border-color: #1b1f2326;
+        box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+        transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+        transition-property: color, background-color, border-color;    
+    }
+
+    .btn_download:hover {
+        background-color: rgb(155 221 30 / 0.73);
+        border-color: #1b1f2326;
+        transition-duration: 0.1s;
+    }
+
+    .row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .block {
+        width: 100px;
+    }
+
+</style>
+
+
+<div style="text-align: center; height: 40px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class="   " style="width: 100%;">
+        <tr>
+            <td style="text-align:center; width:60%; ">
+                <h4 style="font-weight:bold"> Dashboard  </h4>
+            </td>
+            <td style="text-align:center; width:20%; ">
+                <h5 style="font-weight:bold">  Proposal : @Html.RadioButton("dashboard", "1", new { @id = "1", @checked = true }) </h5>
+            </td>
+            <td style="text-align: center; width: 20%;   ">
+                <h5 style="font-weight:bold"> Invoice Processed :  @Html.RadioButton("dashboard", "2", new { @id = "2" }) </h5>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="height:10px; display:table "></td>
+        </tr>
+    </table>
+
+    @*-------------------------------------------------- Proposal --------------------------------------------------------------------------*@
+
+    <div id="proposal" style="width: 100%;">
+        <table style="text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+            <tr>
+                <td>
+                    <table style="width: 100%; height:15px;">
+                        <tr>
+                            <td style="width: 70%;">
+                                <div style="width: 100%;" class="row">
+                                    <div style="width: 25%; text-align:center; font-weight:bold" class="block">
+                                            Search by Proposal
+                                    </div>
+                                    <div style="width: 60%; text-align:left" class="block">
+                                            <input id="Find_Proposal" style="width:90%" class="form-rounded" type="text" />
+                                        </div>
+                                    <div style="width: 15%; text-align:left" class="block">
+                                            <button type="submit" id="btn_Find_By_Proposal" class="btn_download"> Search</button>
+                                        </div>
+                                </div>
+                            </td>
+                            <td style="width: 30%; text-align: center; vertical-align:middle;">
+                                <div class="pagination" style="height:20px;">
+                                    <a href="#" class="backward">&laquo;</a>
+                                    <a href="#" class="active">1</a>
+                                    <a href="#" class="inactive">2</a>
+                                    <a href="#" class="inactive">3</a>
+                                    <a href="#" class="forward" >&raquo;</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table style="text-align: center; height: 40px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded" >
+            <thead>
+                <tr style=" font-weight: bold; ">
+                     <td style="width: 2%; font-weight: bold; font-size: large; text-align: center"> <h5 style="font-weight:bold"> S/N </h5></td>
+                    <td style="width: 63%; font-weight: bold; font-size: large; text-align: center"> <h5 style="font-weight:bold"> Proposal Initiated </h5></td>
+                    <td style="width: 7%; font-weight: bold; font-size: large; text-align: center"><h5 style="font-weight:bold">Initiate Date </h5></td>
+                    <td style="width: 8%; font-weight: bold; font-size: large; text-align: center"> <h5 style="font-weight:bold">Status </h5></td>
+                    <td style="width: 10%; font-weight: bold; font-size: large; text-align: center"> <h5 style="font-weight:bold">Location </h5></td>
+                </tr>
+            </thead>
+        </table>
+        <table class=" table-hover table-striped shadow " style="width:100%;" id="tbl_Budget">
+
+            
+            @{
+                int Proposalcount = 0;
+            }
+
+
+            @foreach (var Item in Model.List_Proposal)
+            {
+                Proposalcount++;
+                <tbody>
+                    <tr>
+                        <td style="width:2%; padding-left:1%;  text-align:left; vertical-align: text-top;"> @Proposalcount </td>
+                        <td style="width:63%; padding-left:1%;  text-align:left;">
+                            <a href=""
+                               class=" "   style="font-size:medium; text-align:left;"  data-toggle="modal" data-target="#myModal2" data-status="@Item.Proposal_Id" id="@Item.Proposal_Id">
+                                @Item.Utilization_Details
+                            </a>
+                        </td>
+                        <td style="width:7%;  text-align: center ">
+                            @Html.DisplayFor(modelitem => Item.IT_Initiate_Date, "{0:dd/MM/yyyy}",
+                                     new { @disabled = "disabled", @class = "form-rounded", @style = " width :80%; font-size:medium " })
+                        </td>
+                        <td style="width: 8%; text-align: center">
+                            @Html.DisplayFor(modelitem => Item.Status, new { @class = "form-rounded", @style = " width :80%; font-size:medium" })
+                        </td>
+                         <td style="width: 10%; text-align: center">
+                            @Html.DisplayFor(modelitem => Item.NoteLocation, new { @class = "form-rounded", @style = " width :80%; font-size:medium" })
+                        </td>
+                    </tr>
+                </tbody>
+            }
+
+        </table>
+    </div>
+
+    @*-------------------------------------------------- Invoice Processing --------------------------------------------------------------------------*@
+
+    <div id="budget" style="width: 100%;" class="hidetable">
+        <table style="text-align: center; height: 40px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+            <tr>
+                <td>
+                    <table style="width: 100%; height:15px;">
+                        <tr>
+                            <td style="width: 70%;">
+                                <div style="width: 100%;" class="row">
+                                    <div style="width: 25%; text-align:center; font-weight:bold" class="block">
+                                        Search Invoices
+                                    </div>
+                                    <div style="width: 60%; text-align:left" class="block">
+                                        <input id="Find_Invoice_detail" style="width:90%" class="form-rounded" type="text" />
+                                    </div>
+                                    <div style="width: 15%; text-align:left" class="block">
+                                        <button type="submit" id="btn_Find_Invoice" class="btn_download"> Search</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 30%; text-align: center; vertical-align:middle;">
+                                <div class="pagination" style="height:20px;">
+                                    <a href="#" class="backward">&laquo;</a>                                   
+                                    <a href="#" class="active">1</a>
+                                    <a href="#" class="inactive">2</a>
+                                    <a href="#" class="inactive">3</a>
+                                    <a href="#" class="forward">&raquo;</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        
+        <table style="text-align: center; height: 40px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+            <thead>
+                <tr style="  font-weight: bold;">
+                    <td style="width: 2%; font-weight: bold; font-size: large; text-align: center"> <h5 style="font-weight:bold"> S/N </h5> </td>
+                    <td style="width: 63%; font-weight: bold; font-size: large; text-align: center"> <h5 style="font-weight:bold"> Invoice Processed </h5> </td>
+                    <td style="width: 7%; font-weight: bold; font-size: large; text-align: center"><h5 style="font-weight:bold"> Initiate Date </h5></td>
+                    <td style="width: 8%; font-weight: bold; text-align: center; font-size: large"> <h5 style="font-weight:bold"> Status</h5></td>
+                    <td style="width: 10%; font-weight: bold; text-align: center; font-size: large"> <h5 style="font-weight:bold"> Location</h5></td>
+                </tr>
+            </thead>
+        </table>
+        <table class=" table-hover table-striped shadow " style="width: 100%; " id="tbl_Invoice">
+
+            @{
+                Proposalcount = 0;
+            }
+
+            @foreach (var Item in Model.List_Bill_Process)
+            {
+                Proposalcount++;
+                <tbody>
+                    <tr>
+                        <td style="width:2%; padding-left:1%;  text-align:left; vertical-align: text-top;">@Proposalcount </td>
+                        <td style="width:63%; padding-left:1%;  text-align:left;">
+                            <a href=""
+                               class=" " style="font-size:medium;  text-align:left;" data-toggle="modal" data-target="#myModal2" data-status="@Item.Proposal_Id" id="@Item.Proposal_Id">
+                                @Item.Utilization_Details
+                            </a>
+                        </td>
+                        <td style="width:7%; text-align: center" >
+                            @Html.DisplayFor(modelitem => Item.IT_Initiate_Date, "{0:dd/MM/yyyy}",
+                                     new { @disabled = "disabled", @class = "form-rounded", @style = " width :80%; font-size:medium " })
+                        </td>
+                        <td style="width: 8%; text-align: center">
+                            @Html.DisplayFor(modelitem => Item.Status, new { @class = "form-rounded", @style = " width :80%; font-size:medium " })
+                        </td>
+                         <td style="width: 10%; text-align: center">
+                            @Html.DisplayFor(modelitem => Item.NoteLocation, new { @class = "form-rounded", @style = " width :80%; font-size:medium " })
+                        </td>
+                    </tr>
+                </tbody>
+            }
+
+        </table>
+    </div>
+
+</div>
+
+
+@*-------------------------------------------------------------Modal-----------------------------------------------------------------------------*@
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<!--Modal quantity-->
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog-centered">
+        <div class="modal-content ">
+            @using (Html.BeginForm("Edit_proposal", "Admin_Dashboard", FormMethod.Post, 
+                        new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }) )
+            {
+                <div class="modal-header badge-warning k-i-align-items-center-alt">
+                    <h4 style="font-weight:bold; text-align:center">
+                        Detail Information of the Proposal
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="align-content:center; text-align:center; align-items:center">
+                    <table style="width:100%; border-width:1px;" class=" table-hover table-striped shadow ">
+                        <tr>
+                            <td style="text-align:left; width:15%; font-weight:bold ;  " class='table-active'>
+                                Proposal Information @Html.HiddenFor(x=>x.Prop_detail.Proposal_Id)
+                            </td>
+                            <td style="text-align:center; width:85%;  " class='table-active'>
+                                @Html.TextAreaFor(x => x.Prop_detail.Utilization_Details, new {  @readonly = "true", @rows="2", @style = " width :100%;  border-width:0px; text-align:center; background-color:#e6e6e6;" })
+                            </td>                       
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="width:100%; text-align:center; align-items:center; align-content:center; align">
+                        
+                                <table style="width:100%; align-self:center;" class=" table-hover table-striped shadow " id="tbl_WorkFlow">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <td style="font-weight:bold; border:solid; border-width:1px; width: 10%; text-align:center; ">  Date </td>
+                                            <td style="font-weight:bold; border:solid; border-width:1px; width: 14%; text-align:center; " class=""> Sender </td>
+                                            <td style="font-weight:bold; border:solid; border-width:1px; width: 14%; text-align:center; "> Receiver </td>
+                                            <td style="font-weight:bold; border:solid; border-width:1px; width: 15%; text-align:center; "> File </td>
+                                            <td style="font-weight:bold; border:solid; border-width:1px; width: 47%; text-align:center;"> Remarks </td>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="height:20px;"></td>
+                        </tr>
+                        <tr style="min-height:40px; " >
+                            <td colspan="2">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="text-align: left; width: 20%; font-weight:bold;   " class="table-active"> Approval Files </td>
+                                        <td style=" width: 30%;">
+                                            <table id="tbl_ApprovalFile" style="width: 100%; ">
+                                            </table>
+                                        </td>
+                                        <td style="text-align: left; width: 20%; font-weight:bold;  " class="table-active tr_PurchaseOrderClass" >Purchase Order </td>
+                                        <td style=" width: 30%;" class="tr_PurchaseOrderClass">
+                                            <table id="tbl_PurchaseOrder" style="width: 100%;">
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                             </td>
+                        </tr>
+                      
+                        <tr id="tr_Invoice" style="height:40px;  ">
+                            <td colspan="2">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="text-align: left; width: 20%; font-weight:bold;    " class="table-active">Bill Processing Information </td>
+                                        <td style=" width: 30%;">
+                                            <table id="tbl_BillProcessDoc" style="width: 100%; ">
+                                            </table>
+                                        </td>
+                                        <td style="text-align: left; width: 20%;  font-weight:bold;   " class="table-active tr_AssetsClass"> Assets Information </td>
+                                        <td id="td_Assets" style=" width: 30%;">
+                                            <table id="tbl_Assets" style="width: 100%;  ">
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                           
+                        </tr>
+                       
+                        <tr>
+                            <td colspan="2" style="height:10px;"></td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Edit</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*--------------------------------------------------------------Radio Button------------------------------------------------------------------------------*@
+
+<script type="text/javascript">
+
+    $('input[type=radio][name=dashboard]').change(function () {
+
+        if (this.value == 1) {
+
+            $("#proposal").removeClass("hidetable");
+            $("#budget").addClass("hidetable");
+
+        } else if (this.value == 2) {
+
+            $("#proposal").addClass("hidetable");
+            $("#budget").removeClass("hidetable");
+
+        }
+    });
+
+
+    $(document).ready( function(){
+   
+        var ViewType =  "@ViewBag.Filter" ;
+        if (ViewType  !="Yes")
+        {          
+            $("#proposal").removeClass("hidetable");
+            $("#budget").addClass("hidetable");
+        } 
+        else
+        {       
+            $("#Find_PO_id").val("@ViewBag.PO_No");
+            $('input[type=radio][name=dashboard][value="2"]').prop('checked', true);
+            $("#proposal").addClass("hidetable");
+            $("#budget").removeClass("hidetable");
+        }
+
+    });    
+
+</script>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        alert("@TempData["Message"]");
+    };
+    </script>
+
+}
+
+
+@* -----------------------------------------------    Modal Data    ------------------------------------------------------ *@
+
+<script type="text/javascript">
+    $(function () {
+        $('#myModal2').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget) // Button that triggered the modal
+            var proposal_id = button.data('status') // Extract info from data-* attributes
+
+             $("#tbl_ApprovalFile tr").remove();
+             $("#tbl_PurchaseOrder tr").remove();
+             $("#tbl_BillProcessDoc tr").remove();
+             $("#tbl_Assets tr").remove();
+             $(".tr_AssetsClass").removeClass("hidetable");
+             $(".tr_PurchaseOrderClass").removeClass("hidetable");
+
+             
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Get_Proposal_Detail_for_Modal", "Admin_Dashboard")",
+                dataType: "json",
+                data: { Proposal_Id: proposal_id },
+                success: function (response) {
+
+                    if (response != null) 
+                    {
+
+                            $('#Prop_detail_Utilization_Details').val(response.prop_detail.utilization_Details);
+                            $('#Prop_detail_Proposal_Id').val(response.prop_detail.proposal_Id);  
+                            
+                                                                               
+                            @* //------------------- Table Variable --------------------- *@
+                            var workflow = response.prop_detail.workFlowList;
+                            var ApprovalFiles = response.prop_detail.prop_Files;
+                            var Invoice_Info = response.prop_detail.invoice_Info;
+                            var Assets_Info = response.prop_detail.assets_Info;
+
+                            @* //-------------------  Table Binding --------------------- *@
+                            var markup = "" ;
+                             $("#tbl_WorkFlow TBODY TR").remove();
+                            if(workflow.length > 0)
+                            {
+                                 $.each(workflow, function (key, val) {
+                                     markup = markup+ "<tr>" ;
+                                     $.each(val, function (key, val) {
+                                     
+                                         
+                                         if(key=='sendDate')
+                                         {
+                                             if(val.length > 0)
+                                             {
+                                                 val = convertDateFormat(val.substring(0, 10));
+                                             }
+                                             markup = markup + "<td  style='width: 10%; text-align:left; border:solid; border-width:1px;' >" + val + "</td>";
+                                         }
+                                         if(key=='fromDte')
+                                         {
+                                             markup = markup + "<td  style='width: 14%; text-align:left; border:solid; border-width:1px; ' > " + val + "</td>";
+                                         }
+                                         if(key=='toDte')
+                                         {
+                                             markup = markup + "<td  style='width: 14%; text-align:left; border:solid; border-width:1px;  '  > " + val + "</td>";
+                                         }                     
+                                         if(key=='file_Id')
+                                         {
+                                             if (val!='')
+                                             {
+                                                  markup = markup + "<td  style='width: 15%; text-align:center;  height: 30px; border:solid; border-width:1px;  ' >" +
+                                                  "<input type='submit' value='Download' class='btn_download WorkFlowFile' id='"+ val +"' /> </td>";
+                                             }
+                                             else
+                                             {
+                                                  markup = markup + "<td  style='width: 15%; text-align:center; border:solid; border-width:1px;  ' >  Not Uploaded  </td>";
+                                             }
+                                            
+                                         }
+                                         if(key=='remarks')
+                                         {
+                                              markup = markup + "<td  style='width: 47%; text-align:center; border:solid; border-width:1px; '  > " + val + " </td>";
+                                         }
+                                         @* if(val=='lastRow')
+                                         {
+                                             if(val=1)
+                                             {
+                                                 markup = markup + "<td style=' text-align: center'>  <input type='submit' class='deleteFlow btn_delete' id='" + val.workFlow_Id + "' value='Delete' > </input> </td></tr>";                                               
+                                             }                                             
+                                         }   *@                                       
+                                    });
+                                    markup = markup + "</tr>" 
+                                });
+                                
+                                $("#tbl_WorkFlow").append(markup);
+                            }
+                          
+                            @* $("#tr_PurchaseOrder").removeClass("hidetable");
+                            $("#tr_Invoice").removeClass("hidetable");*@
+                          
+
+                            //------------------- FInal Approval Files ---------------------------------------------
+
+                            if(ApprovalFiles.length > 0)
+                            {
+                                // @* markup = "  <tr> <th style='width: 80%; text-align: center;  height: 20px;  ' class='table-active'>  File Name </th> " +
+                                // "<th style='width: 20%; text-align: center;  ' class='table-active' > Action </th> </tr> ";
+                                 // $("#tbl_ApprovalFile").append(markup); *@
+
+
+
+                                 $.each(ApprovalFiles, function (key, val) {
+                                    // @* markup =  "<tr><td  style='width: 80%; text-align: center; height: 30px; ' class='filename' > <p>" + val.file_Name + "</p> </td> " +
+                                    // "<td  style='width: 80%; text-align: center; ' >  <input type='submit' value='Download' class='cssdownload btn_download' id='" + val.file_Id + "' >  </td> </tr > ";*@
+                                    
+                                        markup =  "<tr> <td  style='width: 100%; height:40px; text-align: center; ' >  <input type='submit' value='Download' class='cssdownload btn_download' id='" + val.file_Id + "' >  </td> </tr > ";
+
+
+                                        $("#tbl_ApprovalFile").append(markup);
+                                 });
+                            }
+                            else 
+                            {
+                                markup = "<tr><td  style='width: 100%; text-align: center; height: 40px;' > Please upload Approval File </td> </tr > ";
+                                $("#tbl_ApprovalFile").append(markup);
+                            }
+
+
+                            if(response.prop_detail.proposal_Type=='Budget')
+                            {
+                                //-------------------Purchase Order ---------------------------------------------
+
+                                if(response.prop_detail.pO_File_Id !='')
+                                {
+                                    // markup = "  <tr> <th style='width: 80%; text-align: center;  height: 20px; ' class='table-active'> File Name </th> " +
+                                    // "<th style='width: 20%; text-align: center; ' class='table-active'> Action </th> </tr> ";
+
+                                    // markup = markup + "<tr><td  style='width: 80%; text-align: center; height: 20px; ' class='POfilename' > <p>" + response.prop_detail.pO_File_Name + "</p> </td> " +
+                                    //     "<td  style='width: 20%; text-align: center;  '>  <input type='submit' value='Download' class=' POdownload btn_download' id='" + response.prop_detail.pO_File_Id + "' >  </td> </tr > "; 
+
+                                    markup ="<tr><td  style='width: 100%; text-align: center; height: 40px; '>  <input type='submit' value='Download' class=' POdownload btn_download' id='" + response.prop_detail.pO_File_Id + "' >  </td> </tr > ";
+
+
+
+                                    $("#tbl_PurchaseOrder").append(markup);
+                                }
+                                else
+                                {
+                                    markup = "<tr><td  style='width: 100%; text-align: center; height: 40px; ' > Purchase Order has not been issued as on date </td> </tr > ";
+                                    $("#tbl_PurchaseOrder").append(markup);
+                                }
+
+                                //-------------------  Invoice ---------------------
+
+                                if(Invoice_Info !='')
+                                {                  
+                                    
+                                    var url = '@Url.Action("Admin_Dashboard", "Admin_Dashboard")' + '?Id=' + Invoice_Info + '&type=PO';
+
+                                    markup =  "<tr> <td  style='width: 100%; text-align: center; height: 25px; '  >  <a href='"+url+"' > View the Invoice processing documents against this Proposal</a>   </td>  </tr > ";
+
+                                    $("#tbl_BillProcessDoc").append(markup);
+                                }
+                                else
+                                {
+                                    markup = "<tr><td  style='width: 100%; text-align: center; height: 25px; ' > Invoice has not been processed as on date </td> </tr > ";
+                                    $("#tbl_BillProcessDoc").append(markup);
+                                }
+
+
+                                //--------------------------------------------------
+
+                                if(response.prop_detail.budget_Head_Type==1)
+                                {
+                                    //-------------------  Assets Info ---------------------
+                            
+                                    $("#tr_Assets").removeClass("hidetable");
+
+                                    if(Assets_Info !='')
+                                    {
+                                            var url = '@Url.Action("Item_Issue_Details", "Item_Issue")' + '?Id=' + Assets_Info +'&type=PO';
+
+                                            markup =  "<tr><td  style='width: 70%; text-align: center; height: 25px; '>  <a href='"+url+"'> Find Location of the Assets procured against this Proposal</a>   </td> </tr > "
+                                            $("#tbl_Assets").append(markup);
+
+                                    }
+                                    else 
+                                    {
+                                        markup = "<tr><td  style='width: 100%; text-align: center; height: 25px; ' > Item has not been received as on date </td> </tr > ";
+                                        $("#tbl_Assets").append(markup);
+                                    }
+
+                                    //-------------------------------------------------------
+                                }
+                                else
+                                {
+                                     $(".tr_AssetsClass").addClass("hidetable");
+                                }
+                            }
+                            else
+                            {
+                                $(".tr_PurchaseOrderClass").addClass("hidetable");
+                                $("#tr_Invoice").addClass("hidetable");
+                                $(".tr_AssetsClass").addClass("hidetable");
+                            }
+                    } 
+                    else 
+                    {
+                        alert("Something went wrong");
+                    }
+
+                },
+                failure: function (response) {
+                    alert("Something went wrong");
+                },
+                error: function (response) {
+                    alert("Something went wrong");
+                }
+            });
+
+
+
+        });
+    });
+</script>
+
+
+@* ----------------------------------- PO Files download ------------------------------------ *@
+
+<script type="text/javascript">
+
+    $(document).on("click", ".POdownload", function (event) {
+
+        var fileID = $(this).attr('id');
+        var FileName = $(this).closest("tr")      // Gets a descendent with class="nr"
+                       .find(".POfilename")
+                       .find("p")
+                       .text();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download", "Purchase_Order")",
+            data: { fileName: fileID },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileID);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileID);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+@* ---------------------------------  Final Approval File Download ------------------------------------------ *@
+<script type="text/javascript">
+
+    $(document).on("click", ".cssdownload", function (event) {
+
+        var fileID = $(this).attr('id');
+        var FileName = $(this).closest("tr")   // Finds the closest row <tr>
+                       .find(".filename")     // Gets a descendent with class="nr"
+                       .find("p")
+                       .text();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download_FinalApprovalFile", "Admin_Dashboard")",
+            data: { fileName: fileID },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileID);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileID);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+@* ----------------------------------------------- WorkFlow File Download -------------------------------- *@
+
+<script type="text/javascript">
+
+    $(document).on("click", ".WorkFlowFile", function (event) {
+
+        var fileID = $(this).attr('id');     
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download_WorkFlowFile", "Admin_Dashboard")",
+            data: { fileName: fileID },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileID);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileID);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+
+
+@* -------------------------------------------- Change DateFormat ------------------------------------ *@
+<script  type="text/javascript">
+    
+    function convertDateFormat(dateString) {
+          // Split the date string into year, month, and day
+          const [year, month, day] = dateString.split('-');
+
+          // Reconstruct the date string in dd-mm-yyyy format
+          return `${day}-${month}-${year}`;
+    }
+
+</script>
+@* ----------------------------------------------------------------------------------------------------- *@
+
+
+
+@* ----------------------------------------  Asynchronous Data Binding ------------------------------------------- *@
+
+<script type="text/javascript">
+
+    $('#Find_Proposal').keyup(function(event) {
+        if (event.keyCode == 13) {
+            var pO_No =  $("#Find_Proposal").val();
+            AsynchronousGridBinding ( 'Get_Proposal', pO_No , 0,'Proposal' );
+        }
+    });
+
+
+     $('#Find_Invoice_detail').keyup(function(event) {
+        if (event.keyCode == 13) {
+            var pO_No =  $("#Find_Invoice_detail").val();
+            AsynchronousGridBinding ( 'Get_Invoice', pO_No , '' , 0, 'Invoice' );
+        }
+    });
+
+
+     $(document).on("click", "#btn_Find_By_Proposal", function (event) {
+     
+        var pO_No =  $("#Find_Proposal").val();
+        AsynchronousGridBinding ( 'Get_Proposal', pO_No , 0,'Proposal' );
+     
+     });
+
+
+     $(document).on("click", "#btn_Find_Invoice", function (event) {
+     
+        var pO_No =  $("#Find_Invoice_detail").val();
+        AsynchronousGridBinding ( 'Get_Invoice', pO_No , '' , 0, 'Invoice' );
+     
+     });
+
+    
+
+    function AsynchronousGridBinding ( Type, Input , Page_No, tabletype )
+    {
+       
+        if(tabletype=='Proposal')
+        {
+            $("#tbl_Budget TBODY TR").remove();
+        }
+        else 
+        { 
+            $("#tbl_Invoice TBODY TR").remove();
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GridData", "Admin_Dashboard")",
+            datatype: "Json",
+            data: { Input: Input, Type: Type, Page_No: Page_No  },
+            success: function (response) 
+            {
+                markup="<TBODY>";
+                
+                if (response != null) 
+                {
+                    
+                    $.each(response, function (key, val) 
+                    {
+
+                        
+                            markup =markup+ "<tr> <td style='width:65%; padding-left:1%; text-align: left;'> <a href=''  class=''  style='font-size:medium'  "
+                                         + " data-toggle='modal' data-target='#myModal2' data-status='" + val.proposal_Id + "' " 
+                                         + " id='" + val.proposal_Id + "' >"+ val.particular +"  </a> </td> " 
+                                         + "<td style='width:7%; text-align: center'> " + val.startDate + " </td> "
+                                         + "<td style='width:8%; text-align: center'> " + val.status + " </td>   "
+                                         + "<td style='width:10%; text-align: center'> " + val.noteLocation + " </td> </tr>  "
+                      
+                     });
+
+                    markup =markup+ "</TBODY>";
+                    if(tabletype=='Proposal')
+                    {
+                        $("#tbl_Budget").append(markup);  
+                    }
+                    else
+                    {
+                        $("#tbl_Invoice").append(markup);
+                    }
+
+                      
+                }   
+                else 
+                {
+                    alert("Something went wrong");
+                }
+            },
+
+        });
+
+    };
+
+</script>
+
+
+
+
+

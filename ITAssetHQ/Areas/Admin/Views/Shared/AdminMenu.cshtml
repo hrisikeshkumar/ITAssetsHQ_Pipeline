@@ -1,0 +1,294 @@
+﻿@using IT_Hardware.Areas.Admin.Models
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initail-scale=1" />
+    <meta charset="utf-8" />
+    <title> ICSI IT Inventory Management System </title>
+    <!--Google Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <!--Material Design Iconic Font-->
+
+    <link href="~/css/material-design-iconic-font.css" rel="stylesheet" />
+    <link href="~/css/material-design-iconic-font.min.css" rel="stylesheet" />
+    <!--jQuery-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+
+    <!--hs Menu JS-->
+    <script src="~/js/jquery.hsmenu.min.js"></script>
+    
+    <!-- hs Menu CSS-->
+    <link href="~/css/hs-menu.css" rel="stylesheet" />
+    <link href="~/css/hs-menu.min.css" rel="stylesheet" />
+
+
+    <style type="text/css">
+
+        .zui-table-rounded {
+            border: none;
+        }
+
+            .zui-table-rounded thead th {
+                border: none;
+                text-shadow: 1px 1px 1px;
+            }
+
+                .zui-table-rounded thead th:first-child {
+                    border-radius: 0px 0 0 0;
+                }
+
+                .zui-table-rounded thead th:last-child {
+                    border-radius: 0 10px 0 0;
+                }
+
+            .zui-table-rounded tbody td {
+                border: none;
+                border-top: solid 1px black;
+            }
+
+            /* top-left border-radius */
+            .zui-table-rounded tbody tr:first-child th:first-child {
+                border-top-left-radius: 20px;
+            }
+
+            /* top-right border-radius */
+            .zui-table-rounded tbody tr:first-child th:last-child {
+                border-top-right-radius: 20px;
+            }
+
+            /* bottom-left border-radius */
+            .zui-table-rounded tbody tr:last-child td:first-child {
+                border-bottom-left-radius: 20px;
+            }
+
+            /* bottom-right border-radius */
+            .zui-table-rounded tbody tr:last-child td:last-child {
+                border-bottom-right-radius: 20px;
+            }
+
+    </style>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $(".hs-menubar").hsMenu();
+
+        });
+    </script>
+
+</head>
+<body>
+
+    <!--Start hs Mega Menu-->
+
+    <header class="hs-menubar">
+        <div class="brand-logo" >
+            <a href="#home_link"><img src="~/Images/ICSI_Logo.png" style="width:60px; height:38px;" title="Your logo will be here" alt="hs Mega Menu"> </a>
+        </div>
+        <div class="menu-trigger"> <i class="zmdi zmdi-menu"></i></div>
+        <div class="search-trigger"> <i class="zmdi zmdi-search"></i></div>
+        <div class="search-box">
+            <form action="#">
+                <input type="text" name="search">
+                <button type="submit" class="search-submit" disabled>Search</button>
+            </form>
+        </div>
+        <div class="hs-user toggle" data-reveal=".user-info">
+            <img src="~/Images/profile.png" alt="Hrisikesh">
+        </div>
+        <div class="grid-trigger toggle" data-reveal=".grid-items"> <i class="zmdi zmdi-view-module"></i> </div>
+        <div class="more-trigger toggle" data-reveal=".user-penal"> <i class="zmdi zmdi-more-vert"></i></div>
+    </header>
+    <section class="box-model">
+        <ul class="user-penal">
+            <li> <a href="#1"><i class="zmdi zmdi-inbox"></i> Inbox </a> </li>
+            <li> <a href="#1"> <i class="zmdi zmdi-delete"></i> Trash </a> </li>
+            <li> <a href="#1"> <i class="zmdi zmdi-star"></i> Started  </a> </li>
+            <li> <a href="@Url.Action("Log_Out", null, new { area = string.Empty, controller = "Log_In" })"> <i class="zmdi zmdi-run"></i> Logout  </a> </li>
+        </ul>
+        <ul class="user-info">
+            <li class="profile-pic"> </li>
+            <li class="user-name">Hrisikesh Kumar  </li>
+            <li class="user-bio">  Developer</li>
+            <li class="more-btn"> <a href="#1"> Find Out More</a> </li>
+        </ul>
+        <ul class="grid-items">
+            <li class="grid"> Item one</li>
+            <li class="grid"> Item two </li>
+            <li class="grid"> Item three </li>
+            <li class="grid"> Item four </li>
+            <li class="grid"> Item five </li>
+            <li class="grid"> Item six </li>
+            <li class="more-btn"> <a href="#1"> More</a></li>
+        </ul>
+    </section>
+    <nav class="hs-navigation">
+        <ul class="nav-links">
+           
+            <li><a href="@Url.Action("Admin_Dashboard", null, new { area = "Admin", controller = "Admin_Dashboard" })"> <span class="icon"> <i class="zmdi zmdi-collection-item"></i> </span> Dash Board</a> </li>
+
+
+             <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-device-hub"></i>
+                    </span> Employees Information  </span>
+                <ul class="its-children">
+                    <li> <a href="@Url.Action("Employee_Details", null, new { area = "Admin", controller = "Employee" }  )">Employees Master</a> </li>
+                    <li> <a href="@Url.Action("Department_Details", null, new { area = "Admin", controller = "Employee" }  )">Department Master</a> </li>
+                    <li> <a href="@Url.Action("Designation_Details", null, new { area = "Admin", controller = "Employee" }  )">Designation Master</a> </li>
+                </ul>
+            </li>
+
+
+            <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-device-hub"></i>
+
+                    </span> Vender Info
+                </span>
+                <ul class="its-children">
+
+                    <li> <a href="@Url.Action("Vendor_Details", null, new { area = "Admin", controller = "Vendor" }  )">Vendor Information</a> </li>
+                    <li> <a href="@Url.Action("PO_Details", null, new { area = "Admin", controller = "Purchase_Order" }  )">Purchase Order</a> </li>
+                    <li> <a href="@Url.Action("SLA_Details", null, new { area = "Admin", controller = "SLA" }  )">Service Level Agreement</a> </li>
+                </ul>
+            </li>
+
+
+
+            <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-device-hub"></i>
+
+                    </span> IT Budget
+                </span>
+                <ul class="its-children">
+
+                    <li> <a href="@Url.Action("Budget_Year_Details", null, new { area = "Admin", controller = "Budget_Year" }  )">Budget Year Master</a> </li>
+                    <li> <a href="@Url.Action("Budget_Head_Details", null, new { area = "Admin", controller = "Budget_Head" }  )">Budget Head Detsils</a> </li>
+                    <li> <a href="@Url.Action("Budget_Uses_Details", null, new { area = "Admin", controller = "Budget_Uses" }  )">Budget Uses Details</a> </li>
+
+                </ul>
+            </li>
+
+            <li> <a href="@Url.Action("Item_Issue_Details", null, new { area = "Admin", controller = "Item_Issue" }  )"> <span class="icon"> <i class="zmdi zmdi-compass"></i> </span> Assets Location </a>  </li>
+            <li> <a href="@Url.Action("Amc_DashBoard", null, new { area = "Admin", controller = "IT_Hardware_AMC" }  )"> <span class="icon"> <i class="zmdi zmdi-compass"></i> </span> IT Hardware AMC Details</a>  </li>
+            <li> <a href="@Url.Action("AssetsInfo", null, new { area = "Admin", controller = "QRCode" }  )"> <span class="icon"> <i class="zmdi zmdi-compass"></i> </span> Asset Service </a>  </li>
+
+            <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-device-hub"></i>
+                    </span>IT Assets
+                </span>
+                <ul class="its-children">
+
+                    <li><a href="@Url.Action("List_Make_Data", null, new { area = "Admin", controller = "MasterData" }  )"> <span class="icon"> <i class="zmdi zmdi-collection-item"></i> </span>Make/Model Master</a> </li>
+
+
+                    <li class="has-child">
+                        <span class="its-parent"> Computer </span>
+                        <ul class="its-children">
+                            <li> <a href="@Url.Action("Com_Details", null, new { area = "Admin", controller = "Computer" }  )">Desktop</a> </li>
+                            <li> <a href="@Url.Action("Monitor_Details", null, new { area = "Admin", controller = "Monitor" }  )"> Monitor </a> </li>
+                            <li> <a href="@Url.Action("Lap_Details", null, new { area = "Admin", controller = "Laptop" }  )"> Laptop </a> </li>
+                        </ul>
+                    </li>
+                    <li class="has-child">
+                        <span class="its-parent"> Printer/Scanner / UPS </span>
+                        <ul class="its-children">
+                            <li> <a href="@Url.Action("Printer_Details", null, new { area = "Admin", controller = "Printer" }  )">Printer</a> </li>
+                            <li> <a href="@Url.Action("Scanner_Details", null, new { area = "Admin", controller = "Scanner" }  )"> Scanner </a> </li>
+                            <li> <a href="@Url.Action("UPS_Details", null, new { area = "Admin", controller = "UPS" }  )"> UPS </a> </li>
+                        </ul>
+                    </li>
+
+                    <li class="has-child">
+                        <span class="its-parent"> Data Center Items </span>
+                        <ul class="its-children">
+                            <li> <a href="@Url.Action("Server_Details", null, new { area = "Admin", controller = "Server" }  )">Servers</a> </li>
+                            <li> <a href="@Url.Action("Switch_Details", null, new { area = "Admin", controller = "Switch" }  )"> Switches </a> </li>
+                            <li> <a href="@Url.Action("DC_MisItems_Details", null, new { area = "Admin", controller = "DC_MisItems" }  )"> Other Items </a> </li>
+                        </ul>
+                    </li>
+
+                    <li class="has-child">
+                        <span class="its-parent"> Other Mislenious Items </span>
+                        <ul class="its-children">
+                           
+                            <li> <a href="@Url.Action("DataCard_Details", null, new { area = "Admin", controller = "DataCard" }  )">Data Card</a> </li>
+                            <li> <a href="@Url.Action("AppleIpad_Details", null, new { area = "Admin", controller = "AppleIpad" }  )">Apple Ipad /Surface Pro</a> </li>
+                            <li> <a href="@Url.Action("OtherItem_Details", null, new { area = "Admin", controller = "OtherItem" }  )"> Mislenious Items</a> </li>
+
+                        </ul>
+                    </li>
+
+
+                </ul>
+
+            </li>
+
+          @* <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-device-hub"></i>
+
+                    </span> User Management
+                </span>
+                <ul class="its-children">
+
+                    <li> <a href="@Url.Action("User_Info_Details", null, new { area = string.Empty, controller = "User_Info" }  )"> User Detsils</a> </li>
+                    <li> <a href="@Url.Action("UserRole_Details", null, new { area = string.Empty, controller = "UserRole" }  )">User Role Mapping</a> </li>
+
+                </ul>
+            </li> *@
+
+           
+
+            <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-device-hub"></i>
+
+                    </span> ROs/Chapter Hardware
+                </span>
+                <ul class="its-children">
+
+                    <li> <a href="@Url.Action("ChapterInfo", null, new { area = "Admin", controller="RoChapterInfo" }  )"> Hardware</a> </li>
+                </ul>
+            </li>
+
+            <li class="has-child">
+                <span class="its-parent">
+                    <span class="icon">
+                        <i class="zmdi zmdi-wrap-text"></i>
+                    </span>Reports
+                </span>
+                <ul class="its-children">
+                    <li> <a href="@Url.Action("Stock_Report_Detail", null, new { area = "Admin", controller = "Stock_Report" }  )"> Stock Report</a> </li>
+                    <li> <a href="@Url.Action("Budget_Report_Detail", null, new { area = "Admin", controller = "Stock_Report" }  )"> Budget Report</a> </li>
+
+                </ul>
+            </li>
+
+
+            <!--//has-child-->
+        </ul>
+    </nav>
+    <!--End hs Mega Menu-->
+    <div style=" padding-left:7%; width:90%; padding-top:4%; ">
+        @RenderBody()
+        
+    </div>
+
+</body>
+</html>

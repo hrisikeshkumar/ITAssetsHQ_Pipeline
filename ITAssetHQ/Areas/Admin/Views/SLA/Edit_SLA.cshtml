@@ -1,0 +1,286 @@
+﻿@model IT_Hardware.Areas.Admin.Models.Mod_SLA
+
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link href="~/CSS/Final_Submit_Button.css" rel="stylesheet" />
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> *@
+
+
+<script src="~/customjs/edit_sla.js"></script>
+
+<script src="~/js/commonjs.js"></script>
+<link href="~/css/commoncssclass.css" rel="stylesheet" />
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Edit SLA</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Update_SLA", "SLA", FormMethod.Post , new { encType = "multipart/form-data" }))
+    {
+
+        <table class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Purchase Order
+                    @Html.HiddenFor(x => x.SLA_Id)
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.DropDownListFor(x => x.PO_id, Model.PO_List, new { @class = " form-rounded", @style = " width :60%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Service Type Overview
+                </td>
+                <td style="width:75%;" colspan="3">
+                    @Html.TextBoxFor(x => x.Service_Type_Short, new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Service Start Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Service_ST_DT, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :80%; " })
+                </td>
+
+                <td style="width:25%;">
+                    Expiry Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Expiry_DT, "{0:dd/MM/yyyy}", new { @class = "dateclass form-rounded date-format", @style = " width :80%; " })
+                </td>
+            </tr>
+
+
+
+            <tr style=" height: 50px; ">
+
+                <td align="left" style="width:25%; "> Upload File</td>
+
+                <td style="width: 75%;" colspan="3">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width:100%;" colspan="3">
+                                <input type="file" name="postedFile" id="FileUpload_Id" />
+
+                                <progress id="fileProgress" style="display: none"></progress>
+                                <span id="lblMessage" style="color: Green"></span>
+                            </td>
+                        </tr>
+                        <tr><td colspan="3" style="height:10px;"></td></tr>
+                        <tr>
+                            <td>
+                                @{
+                                    if (Model.SLA_File_Name != string.Empty)
+                                    {
+                                        <table id="Files_Grid" style="width:100%;">
+                                            <tr>
+                                                <td style="width:50%; font-weight:bold">File Name</td>
+                                                <td style="width: 25%; font-weight: bold"> Download</td>
+                                            </tr>
+
+                                            <tr>                                             
+                                                <td>
+                                                    <div id="abcdefgh">
+                                                        @Html.DisplayFor(x => x.SLA_File_Name)
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type='submit' value='Download' class='cssdownload btn_download' id='@Model.SLA_File_Name' />
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    }
+                                }
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+
+
+                </td>
+            </tr>
+
+
+            <tr>
+                <td style="width:25%;">
+                    Service Type in Details
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Service_Type_Details, 5, 1, new { @style = " width :100%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, 2, 1, new { @style = " width :100%; " })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "SLA_Details", "SLA", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        alert("@TempData["Message"]");
+    };
+    </script>
+
+}
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#Item_Make_id').change(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Model_List", "SLA")",
+                datatype: "Json",
+                data: { Item_Make: $('#Item_Make_id').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Item_Model_id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
+
+    $(document).on("click", ".cssdownload", function (event) {
+
+        var fileID = $(this).attr('id');
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Download", "SLA")",
+            data: { fileName: fileID  },
+            success: function (r) {
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(r);
+
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileID);
+                }
+                else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileID );
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+
+      event.preventDefault();
+    });
+
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

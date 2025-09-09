@@ -1,0 +1,117 @@
+﻿
+
+@using IT_Hardware.Areas.Admin.Models
+
+@model IList<Mod_SLA>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/CSS/SearchBox/searchbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito'>
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">List of Service Level Agreement</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+    <table class=" table-hover table-striped shadow " style="width:100%">
+        <tr>
+            <td width="75%">
+
+                <div class="col-rt-3 equal-height">
+                    <div class="sb-example-3">
+                        <!-- partial:index.partial.html -->
+                        <div class="search__container">
+
+                            <input class="search__input" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+
+            </td>
+            <td align="right" width="25%">
+                <h4>
+                    @Html.ActionLink("Add New", "SLA_Create_Item", "SLA")
+
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                </br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table style="width:100%">
+                    <tr>
+                        <th>
+                            Vender Name
+                        </th>
+                        <th>
+                            PO Details
+                        </th>
+                        <th>
+                            Service Type
+                        </th>
+                        <th>
+                            Expiry Date
+                        </th>
+                        <th> Action </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vender_Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PO_Details)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Service_Type_Short)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Expiry_DT)
+                    </td>
+                    <td>
+
+                        @Html.ActionLink("Edit", "Edit_SLA", new { id = item.SLA_Id }) |
+                        @Html.ActionLink("Details", "Get_Detail", new { id = item.SLA_Id }) |
+                        @Html.ActionLink("Delete", "Delete_SLA", new { id = item.SLA_Id })
+                    </td>
+                </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+    window.onload = function () {
+        /**/
+        alert("@TempData["Message"]");
+    /**/
+    };
+    </script>
+
+}
+

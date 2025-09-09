@@ -1,0 +1,162 @@
+﻿
+@{
+    Layout = null;
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="~/css/log_in.css" rel="stylesheet" />
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9WS8WQQ0D"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-R9WS8WQQ0D');
+    </script>
+    <title>IT Inventory</title>
+
+
+    <style type="text/css">
+        .loginbox {
+            font-family: 'Averia Serif Libre';
+            margin: auto;
+            margin-top: 25vh;
+            width: 320px;
+            height: 320px;
+        }
+
+            .loginbox input {
+                border: 1px solid;
+            }
+
+            .loginbox td:first-child {
+                width: 100px;
+            }
+    </style>
+
+</head>
+
+
+@using (Html.BeginForm("Sign_In", "Log_In", FormMethod.Post))
+{
+    if (@ViewBag.Message != null)
+    {
+
+        <script type="text/javascript">
+
+                    $(document).ready(function(){
+                        alert("@ViewBag.Message");
+                    });
+
+        </script>
+
+    }
+
+    <body class="login-block" style="margin:auto">
+
+
+
+        <div style="height:70%; width:80%; padding-top:10%; padding-left:14%; ">
+
+            <div class="container">
+                <div class="row">
+
+
+                    <div class="col-md-4 login-sec">
+                        <h2 class="text-center">IT Management System</h2>
+
+
+
+                        <form class="login-form">
+                            <div class="form-group">
+
+
+                                <table>
+                                  
+                                    <tr>
+                                        <td>
+                                            <button type="submit" class="btn btn-login ">
+                                                Click here to Sign In
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                         
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                            </div>
+                        
+
+                            <div class="form-check" style="text-align:center; align-content:center; align-items: center">
+
+                               
+                            </div>
+
+                        </form>
+
+                      
+                    </div>
+
+
+
+
+                    <div class="col-md-8 banner-sec">
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+                            <ol class="carousel-indicators">
+                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                            </ol>
+
+                            <div class="carousel-inner" role="listbox">
+
+                                <div class="carousel-item active">
+                                    <img width="100%" height="100%" src="~/Images/Log_In.jpg" alt="First slide">
+
+                                   @*  <div class="carousel-caption d-none d-md-block">
+                                        <div class="banner-text">
+                                            <h3 style="font-weight:bold; color:wheat">  </h3>
+                                        </div>
+                                    </div> *@
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+    </body>
+}
+
+</html>
+

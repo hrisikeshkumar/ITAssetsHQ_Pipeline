@@ -1,0 +1,413 @@
+﻿@model IT_Hardware.Areas.Chapter_Hardware.Models.ROChapter_Mod
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link href="~/css/form-rounded.css" rel="stylesheet" />
+<link href="~/css/submit_button.css" rel="stylesheet" />
+
+
+<script>
+    $(function () {
+        $(".dateclass").datepicker({
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'dd/mm/yy',
+            minDate: new Date('01/01/1900'),
+            maxDate: '+10Y'
+        });
+
+
+    });
+</script>
+
+
+<script type="text/javascript">
+    var isShift = false;
+    var seperator = "/";
+    window.onload = function () {
+        //Reference the Table.
+        var tblForm = document.getElementById("tblForm");
+
+        //Reference all INPUT elements in the Table.
+        var inputs = document.getElementsByTagName("input");
+
+        //Loop through all INPUT elements.
+        for (var i = 0; i < inputs.length; i++) {
+            //Check whether the INPUT element is TextBox.
+            if (inputs[i].type == "text") {
+                //Check whether Date Format Validation is required.
+                if (inputs[i].className.indexOf("date-format") > 0) {
+
+                    //Set Max Length.
+                    inputs[i].setAttribute("maxlength", 10);
+
+                    //Only allow Numeric Keys.
+                    inputs[i].onkeydown = function (e) {
+                        return IsNumeric(this, e.keyCode);
+                    };
+
+                    //Validate Date as User types.
+                    inputs[i].onkeyup = function (e) {
+                        ValidateDateFormat(this, e.keyCode);
+                    };
+                }
+            }
+        }
+    };
+
+    function IsNumeric(input, keyCode) {
+        if (keyCode == 16) {
+            isShift = true;
+        }
+        //Allow only Numeric Keys.
+        if (((keyCode >= 48 && keyCode <= 57) || keyCode == 8 || keyCode <= 37 || keyCode <= 39 || (keyCode >= 96 && keyCode <= 105)) && isShift == false) {
+            if ((input.value.length == 2 || input.value.length == 5) && keyCode != 8) {
+                input.value += seperator;
+            }
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+    function ValidateDateFormat(input, keyCode) {
+        var dateString = input.value;
+        if (keyCode == 16) {
+            isShift = false;
+        }
+        var regex = /(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$/;
+
+        //Check whether valid dd/MM/yyyy Date Format.
+        if (regex.test(dateString) || dateString.length == 0) {
+            ShowHideError(input, "none");
+        } else {
+            ShowHideError(input, "block");
+        }
+    };
+
+    function ShowHideError(textbox, display) {
+        var row = textbox.parentNode.parentNode;
+        var errorMsg = row.getElementsByTagName("span")[0];
+        if (errorMsg != null) {
+            errorMsg.style.display = display;
+        }
+    };
+</script>
+
+
+
+<style type="text/css">
+
+    @@import "compass/css3";
+
+    input[type=text], textarea {
+        @@include transition(all 0.30s ease-in-out);
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+    }
+
+        input[type=text]:focus, textarea:focus {
+            @@include box-shadow(0 0 5px rgba(81, 203, 238, 1));
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgba(81, 203, 238, 1);
+        }
+</style>
+
+
+
+
+<div style="   text-align: center; height: 50px; align-content: center; width: 100% " class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+    <p style="font-size:large; font-weight:bold;">Enter New System</p>
+
+</div>
+
+<div style=" align-content:center; width:100%" class="h-10 w-100 shadow p-1 mb-1 bg-white rounded">
+
+
+    @using (Html.BeginForm("Create_Item", "ROChapter", FormMethod.Post))
+    {
+
+        <table id="tblForm" class=" table-hover table-striped shadow " style="width:100%">
+
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Asset Make
+                </td>
+                <td style="width:25%;">
+
+                    @Html.DropDownListFor(x => x.Item_Make_id, Model.Item_Make_List, 
+                             new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:25%;">
+                    Asset Model
+                </td>
+                <td style="width:25%;" align="center">
+
+                    @Html.DropDownListFor(x => x.Item_Model_id, new SelectList(string.Empty, "Value", "Text"), 
+                         "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+
+                </td>
+            </tr>
+          
+            <tr>
+                <td style="width:25%;">
+                    Asset Serial No.
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Item_serial_No, new { @class = " form-rounded", @style = " width :80%; " })
+                </td>
+
+                <td style="width:25%;">
+                    Date of Purchase
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Proc_date, 
+                              new { @class = "dateclass form-rounded date-format", @style = " width :80%; " })
+                </td>
+
+            </tr>
+            <tr>
+                <td style="width: 25%; height: 50px;">
+                   Item Type
+                </td>
+                <td style="width:25%;">
+                    @Html.DropDownListFor(x => x.Item_Type,  new List<SelectListItem>()
+                                {
+                                        new SelectListItem(){ Text= "Computer", Value = "1"},
+                                        new SelectListItem(){ Text= "Laptop", Value = "2"},
+                                        new SelectListItem(){ Text= "Monitor", Value = "3"},
+                                        new SelectListItem(){ Text= "Printer / Scanner", Value = "4"},
+                                        new SelectListItem(){ Text= "Projector", Value = "5"},
+                                        new SelectListItem(){ Text= "Miscellaneous", Value = "6"}
+                                },
+                    "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+
+                <td style="width:25%;">
+                    Price
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.price, new { @class = " form-rounded", @style = " width :80%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%; height:50px;">
+                    Fund Provided
+                </td>
+                <td style="width:25%;">
+                    @Html.DropDownListFor(x => x.Item_Type,  new List<SelectListItem>()
+                        {
+                            new SelectListItem(){ Text= "HQ", Value = "HQ"},
+                            new SelectListItem(){ Text= "Chapter", Value = "Chapter"},
+                            new SelectListItem(){ Text= "Donation", Value = "Donate"}
+                        },
+                "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+                <td style="width:25%; height:50px;">
+                    Purchase Order
+                </td>
+                <td style="width:25%;">
+
+                    @Html.TextBoxFor(x => x.Vendor_Name, new { @class = " form-rounded", @style = " width :80%; " })
+
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:25%;">
+                    Invoice Number
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Invoice_Number, new { @class = " form-rounded", @style = " width :80%; " })
+                </td>
+
+                <td style="width:25%;">
+                    Invoice File
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(model => model.Invoice_File, "", 
+                                    new {@class = " form-rounded", @style = " width :80%; ", @type = "file" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Sanction Order Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(x => x.Sanction_Order_Date,
+                                new { @class = "dateclass form-rounded date-format", @style = " width :80%; " })
+                </td>
+
+                <td style="width:25%;">
+                    Sanction Order File
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(model => model.Sanction_Order_File, "",
+                                        new { @style = " width :80%; ", @type = "file" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Item Status
+                </td>
+                <td style="width:25%;">
+                    @Html.DropDownListFor(x => x.Item_Type,  new List<SelectListItem>()
+                    {
+                        new SelectListItem(){ Text= "Active", Value = "1"},
+                        new SelectListItem(){ Text= "Obsolete", Value = "2"},
+                        new SelectListItem(){ Text= "Disposed", Value = "3"}
+                    },
+                    "Please select a Type", new { @class = " form-rounded", @style = " width :90%; " })
+                </td>
+
+                <td style="width:25%;">
+                    Item Dispossed Date
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(model => model.Sold_DT, "",
+                                        new { @class = "dateclass form-rounded date-format", @style = " width :80%; " })
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Sold To
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(model => model.Sold_To, "", 
+                                           new {  @style = " width :80%; " })
+                </td>
+                <td style="width:25%;">
+                    Dispossed Doc
+                </td>
+                <td style="width:25%;">
+                    @Html.TextBoxFor(model => model.Sold_Doc, "",
+                        new {  @style = " width :80%; ", @type = "file"} )
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%;">
+                    Remarks
+                </td>
+                <td style="width:75%; " colspan="3">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = " form-rounded", @style = " width :80%; "  })
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:100%; height:10px;" colspan="4">
+                </td>
+            </tr>
+            <tr style=" height: 50px; ">
+                <td align="left" style="width:25%; "></td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    <button class="button_cls form-rounded">Submit</button>
+
+                </td>
+
+                <td style="width: 25%; padding-top: 10px; padding-bottom: 5px" align="center">
+                    @Html.ActionLink("Back", "Details", "ROChapter", null, new { @class = "button_cls form-rounded", })
+                </td>
+
+                <td align="left" style="width:25%;"></td>
+            </tr>
+        </table>
+
+    }
+</div>
+
+
+@if (TempData["Message"] != null && TempData["Message"] != "" && TempData["Message"] != string.Empty)
+{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            /**/
+            alert("@TempData["Message"]");
+            /**/
+        };
+    </script>
+
+}
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#Item_Make_id').change(function () {
+            $('#Item_Model_id').empty();
+
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Computer/Model_List",
+                datatype: "Json",
+                data: { Item_Make: $('#Item_Make_id').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#Item_Model_id').append('<option value="' + value.value + '">' + value.text + '</option>');
+                    });
+                }
+
+            });
+
+        });
+    });
+</script>
+
+
+
+@*Item present on database*@
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(function () {
+
+            $('#Item_serial_No').focusout(function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Computer/Sl_Finder",
+                    datatype: "Json",
+                    data: { Item_SlNo: $('#Item_serial_No').val() },
+                    success: function (data) {
+
+                        if (data == true) {
+                            alert('Already present in the database');
+                            $('#Item_serial_No').css("border-color", "red");
+                            $('#Item_serial_No').css("border-width", "thick");
+                        }
+                        else {
+                            $('#Item_serial_No').css("border-color", "green");
+                            $('#Item_serial_No').css("border-width", "thick");
+                        }
+
+                    }
+
+                });
+
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
