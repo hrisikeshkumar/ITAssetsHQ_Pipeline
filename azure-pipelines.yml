@@ -48,7 +48,7 @@ stages:
 
       - task: SonarCloudPrepare@3
         inputs:
-          SonarQube: 'SonarCube'
+          SonarQube: 'sonarcube'
           organization: 'hrisikeshkumar'
           scannerMode: 'dotnet'
           projectKey: 'hrisikeshkumar_itassethq-devops'
