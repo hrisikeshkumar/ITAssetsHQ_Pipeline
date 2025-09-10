@@ -3,7 +3,8 @@ trigger:
     include:
       - main
 
-pool: Laptop 
+pool:
+  vmImage: 'windows-latest'   # 👈 use Microsoft-hosted agent (change if you want self-hosted)
 
 variables: 
   buildConfiguration: 'Release'
@@ -37,24 +38,22 @@ stages:
       - script: dotnet --info
         displayName: "Check .NET SDK Version"
 
-      # Restore using dotnet (not NuGet)
+      # Restore
       - task: DotNetCoreCLI@2
         displayName: "Restore"
         inputs:
           command: 'restore'
           projects: '$(projectSolution)'
 
-      # SonarCloud Prepare
-
+      # SonarCloud Prepare (FIXED service connection name)
       - task: SonarCloudPrepare@3
         inputs:
-          SonarQube: 'sonarcube'
+          SonarCloud: 'sonarcube'   # 👈 must match your service connection name
           organization: 'hrisikeshkumar'
           scannerMode: 'dotnet'
           projectKey: 'hrisikeshkumar_itassethq-devops'
           projectName: 'ITAssetHQ_Devops'
 
- 
       # Build
       - task: DotNetCoreCLI@2
         displayName: "Build"
@@ -63,7 +62,7 @@ stages:
           projects: '$(projectSolution)'
           arguments: '--configuration $(buildConfiguration)'
 
-# Test (run unit tests & generate .trx report)
+      # Test
       - task: DotNetCoreCLI@2
         displayName: "Run Unit Tests"
         inputs:
@@ -71,18 +70,18 @@ stages:
           projects: '**/*Tests.csproj'
           arguments: '--configuration $(buildConfiguration) --no-build --logger trx --results-directory $(Build.SourcesDirectory)/TestResults'
 
-      # Publish Test Results to Azure DevOps
+      # Publish Test Results
       - task: PublishTestResults@2
         displayName: "Publish Unit Test Results"
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: 'VSTest'
           testResultsFiles: '**/TestResults/*.trx'
-          searchFolder: '$(Build.SourcesDirectory)'
+          searchFolder: '$(Build.SourcesDirectory)/TestResults'
           failTaskOnFailedTests: true
 
+      # SonarCloud Analyze & Publish
       - task: SonarCloudAnalyze@3
-
       - task: SonarCloudPublish@3
         inputs:
           pollingTimeoutSec: '300'
@@ -121,12 +120,22 @@ stages:
           projects: '$(projectSolution)'
           arguments: '--configuration $(buildConfiguration) --output $(publishDir)'
 
+      # Archive publish output into a ZIP (for deployment)
+      - task: ArchiveFiles@2
+        displayName: "Archive Published Files"
+        inputs:
+          rootFolderOrFile: '$(publishDir)'
+          includeRootFolder: false
+          archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+          replaceExistingArchive: true
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish Artifacts"
         inputs:
-          pathToPublish: '$(publishDir)'
+          pathToPublish: '$(Build.ArtifactStagingDirectory)/app.zip'
           artifactName: 'drop'
-          publishLocation: 'Container'          
+          publishLocation: 'Container'
+
 # ------------------------------
 # 3. Deploy to Azure (staging)
 # ------------------------------
@@ -135,7 +144,7 @@ stages:
   dependsOn: Package
   jobs:
   - deployment: DeployWeb
-    environment: 'staging'   # 👈 FIXED (completed string)
+    environment: 'staging'
     strategy:
       runOnce:
         deploy:
@@ -148,6 +157,6 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Deploy to Azure WebApp (Staging)'
               inputs:
-                azureSubscription: 'Azure'
+                azureSubscription: 'Azure'   # 👈 must match your Azure service connection
                 appName: 'rajaicsi'
-                package: '$(Pipeline.Workspace)/drop' 
+                package: '$(Pipeline.Workspace)/drop/app.zip'
