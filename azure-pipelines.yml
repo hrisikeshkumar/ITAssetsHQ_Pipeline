@@ -45,13 +45,15 @@ stages:
           projects: '$(projectSolution)'
 
       # SonarCloud Prepare
-      - task: SonarCloudPrepare@1
+
+      - task: SonarCloudPrepare@3
         inputs:
-          SonarCloud: 'SonarCube'
+          SonarQube: 'SonarCube'
           organization: 'hrisikeshkumar'
-          scannerMode: 'MSBuild'
+          scannerMode: 'dotnet'
           projectKey: 'hrisikeshkumar_itassethq-devops'
           projectName: 'ITAssetHQ_Devops'
+
  
       # Build
       - task: DotNetCoreCLI@2
