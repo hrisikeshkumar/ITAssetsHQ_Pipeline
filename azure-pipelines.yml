@@ -52,7 +52,7 @@ stages:
           scannerMode: 'MSBuild'
           projectKey: 'Sonar_azuredevops'
           projectName: 'AzureDevops'
-
+ 
       # Build
       - task: DotNetCoreCLI@2
         displayName: "Build"
