@@ -5,7 +5,7 @@ trigger:
 
 pool: Laptop
 
-variables:
+variables: 
   buildConfiguration: 'Release'
   projectSolution: '**/IT_Hardware.sln'
   publishDir: '$(Build.ArtifactStagingDirectory)/publish'
