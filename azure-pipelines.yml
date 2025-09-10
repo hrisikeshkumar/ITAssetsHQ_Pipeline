@@ -1,9 +1,9 @@
 trigger:
   branches:
     include:
-      - master
+      - main
 
-pool: Laptop
+pool: Laptop 
 
 variables: 
   buildConfiguration: 'Release'
