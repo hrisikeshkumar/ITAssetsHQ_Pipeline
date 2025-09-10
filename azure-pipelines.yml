@@ -3,8 +3,7 @@ trigger:
     include:
       - main
 
-pool:
-  vmImage: Laptop   # 👈 use Microsoft-hosted agent (change if you want self-hosted)
+pool: Laptop   # 👈 use Microsoft-hosted agent (change if you want self-hosted)
 
 variables: 
   buildConfiguration: 'Release'
