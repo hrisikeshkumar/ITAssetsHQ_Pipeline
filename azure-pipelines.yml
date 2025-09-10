@@ -145,6 +145,6 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Deploy to Azure WebApp (Staging)'
               inputs:
-                azureSubscription: 'Azure_RG'
+                azureSubscription: 'Azure'
                 appName: 'rajaicsi'
-                package: '$(Pipeline.Workspace)/drop'
+                package: '$(Pipeline.Workspace)/drop' 
