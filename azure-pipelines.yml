@@ -50,8 +50,8 @@ stages:
           SonarCloud: 'sonarcube'   # 👈 must match your service connection name
           organization: 'hrisikeshkumar'
           scannerMode: 'dotnet'
-          projectKey: 'hrisikeshkumar_itassethq-devops'
-          projectName: 'ITAssetHQ_Devops'
+          projectKey: 'ITAssetsHQ_Pipeline'
+          projectName: 'hrisikeshkumar_ITAssetsHQ_Pipeline'
 
       # Build
       - task: DotNetCoreCLI@2
