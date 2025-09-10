@@ -50,8 +50,8 @@ stages:
           SonarCloud: 'SonarCube'
           organization: 'hrisikeshkumar'
           scannerMode: 'MSBuild'
-          projectKey: 'hrisikeshkumar_ITAssetsHQ_Pipeline'
-          projectName: 'ITAssetsHQ_Pipeline'
+          projectKey: 'hrisikeshkumar_itassethq-devops'
+          projectName: 'ITAssetHQ_Devops'
  
       # Build
       - task: DotNetCoreCLI@2
