@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  vmImage: 'windows-latest'   # 👈 use Microsoft-hosted agent (change if you want self-hosted)
+  vmImage: Laptop   # 👈 use Microsoft-hosted agent (change if you want self-hosted)
 
 variables: 
   buildConfiguration: 'Release'
