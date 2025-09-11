@@ -46,25 +46,15 @@ stages:
           projects: '$(projectSolution)'
 
       # SonarCloud Prepare (FIXED service connection name)
+     
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarQube: 'sonarcube'
+          organization: 'hrisikeshkumar'
+          scannerMode: 'dotnet'
+          projectKey: 'hrisikeshkumar_itassetshq'
+          projectName: 'ITAssetsHQ'
 
-# Install SonarScanner global tool
-      - script: dotnet tool install --global dotnet-sonarscanner
-        displayName: "Install SonarScanner Global Tool"
-
-      # Add global tool path
-      - script: |
-          echo "##vso[task.setvariable variable=PATH]$PATH:$HOME/.dotnet/tools"
-        displayName: "Set PATH for dotnet tools"
-
-      # SonarCloud Begin Analysis
-      - script: |
-          dotnet sonarscanner begin \
-            /k:"your-github-org_your-repo" \
-            /o:"your-github-org" \
-            /d:sonar.login="$(SONAR_TOKEN)" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.verbose=true
-        displayName: "SonarCloud Begin Analysis"
 
       # Build
       - task: DotNetCoreCLI@2
@@ -72,14 +62,14 @@ stages:
         inputs:
           command: 'build'
           projects: '$(projectSolution)'
-          arguments: '--configuration $(buildConfiguration) --no-restore'
+          arguments: '--configuration $(buildConfiguration)'
 
       # Test
       - task: DotNetCoreCLI@2
         displayName: "Run Unit Tests"
         inputs:
           command: 'test'
-          projects: '**/*Test*.csproj'
+          projects: '**/*Tests.csproj'
           arguments: '--configuration $(buildConfiguration) --no-build --logger trx --results-directory $(Build.SourcesDirectory)/TestResults'
 
       # Publish Test Results
@@ -88,19 +78,16 @@ stages:
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: 'VSTest'
-          testResultsFiles: '*.trx'
+          testResultsFiles: '**/TestResults/*.trx'
           searchFolder: '$(Build.SourcesDirectory)/TestResults'
           failTaskOnFailedTests: false
 
-      # SonarCloud End Analysis
-      - script: dotnet sonarscanner end /d:sonar.login="$(SONAR_TOKEN)"
-        displayName: "SonarCloud End Analysis"
-
       # SonarCloud Analyze & Publish
-     # - task: SonarCloudAnalyze@3
-      #- task: SonarCloudPublish@3
-       # inputs:
-        #  pollingTimeoutSec: '600'
+      - task: SonarCloudAnalyze@1
+
+      - task: SonarCloudPublish@1
+        inputs:
+          pollingTimeoutSec: '600'
 
 
 # ------------------------------
