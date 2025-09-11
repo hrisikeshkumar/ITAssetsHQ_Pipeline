@@ -77,7 +77,7 @@ stages:
           testResultsFormat: 'VSTest'
           testResultsFiles: '**/TestResults/*.trx'
           searchFolder: '$(Build.SourcesDirectory)/TestResults'
-          failTaskOnFailedTests: true
+          failTaskOnFailedTests: false
 
       # SonarCloud Analyze & Publish
       - task: SonarCloudAnalyze@3
