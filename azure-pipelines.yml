@@ -3,7 +3,7 @@ trigger:
     include:
       - main
 
-pool: Laptop   # 👈 use Microsoft-hosted agent (change if you want self-hosted)
+pool: Laptop   # 👈  self-hosted from Laptop
 
 variables: 
   buildConfiguration: 'Release'
@@ -83,7 +83,7 @@ stages:
       - task: SonarCloudAnalyze@3
       - task: SonarCloudPublish@3
         inputs:
-          pollingTimeoutSec: '300'
+          pollingTimeoutSec: '600'
 
 # ------------------------------
 # 2. Package & Publish Artifacts
