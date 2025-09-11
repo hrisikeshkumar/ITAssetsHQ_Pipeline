@@ -51,7 +51,7 @@ stages:
         inputs:
           SonarCloud: 'sonarcube'
           organization: 'hrisikeshkumar'
-          scannerMode: 'dotnet'
+          scannerMode: 'MSBuild'
           projectKey: 'hrisikeshkumar_itassetshq'
           projectName: 'ITAssetsHQ'
 
