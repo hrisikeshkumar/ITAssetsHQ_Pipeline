@@ -21,6 +21,7 @@ stages:
     steps:
       - checkout: self
 
+
       # Install .NET 9 Preview SDK
       - task: UseDotNet@2
         displayName: "Use .NET 9.0.x SDK"
@@ -85,6 +86,7 @@ stages:
         inputs:
           pollingTimeoutSec: '600'
 
+
 # ------------------------------
 # 2. Package & Publish Artifacts
 # ------------------------------
@@ -134,6 +136,7 @@ stages:
           pathToPublish: '$(Build.ArtifactStagingDirectory)/app.zip'
           artifactName: 'drop'
           publishLocation: 'Container'
+
 
 # ------------------------------
 # 3. Deploy to Azure (staging)
