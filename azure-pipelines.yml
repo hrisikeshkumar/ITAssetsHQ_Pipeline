@@ -46,13 +46,15 @@ stages:
           projects: '$(projectSolution)'
 
       # SonarCloud Prepare (FIXED service connection name)
+     
       - task: SonarCloudPrepare@3
         inputs:
-          SonarCloud: 'sonarcube'   # 👈 must match your service connection name
+          SonarQube: 'sonarcube'
           organization: 'hrisikeshkumar'
           scannerMode: 'dotnet'
           projectKey: 'hrisikeshkumar_itassetshq'
           projectName: 'ITAssetsHQ'
+
 
       # Build
       - task: DotNetCoreCLI@2
@@ -82,6 +84,10 @@ stages:
 
       # SonarCloud Analyze & Publish
       - task: SonarCloudAnalyze@3
+
+
+      
+
       - task: SonarCloudPublish@3
         inputs:
           pollingTimeoutSec: '600'
