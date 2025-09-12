@@ -3,17 +3,17 @@ trigger:
     include:
       - main
 
-pool: Laptop
+pool: Laptop   # 👈  self-hosted from Laptop
 
 variables: 
   buildConfiguration: 'Release'
-  projectSolution: '**/**IT_Hardware.sln'
+  projectSolution: '**/IT_Hardware.sln'
   publishDir: '$(Build.ArtifactStagingDirectory)/publish'
-  sonar_token: '2b84c2f32aab5010d71ad47dd9d15ca5e04a33be'
+  
 
 stages:
 # ------------------------------
-# 1. Build, Test & SonarCloud
+# 1. Build & Test + SonarCloud
 # ------------------------------
 - stage: BuildAndTest
   displayName: "Build, Test & SonarCloud"
@@ -22,7 +22,8 @@ stages:
     steps:
       - checkout: self
 
-      # Install .NET 9 SDK
+
+      # Install .NET 9 Preview SDK
       - task: UseDotNet@2
         displayName: "Use .NET 9.0.x SDK"
         inputs:
@@ -30,47 +31,69 @@ stages:
           version: '9.0.x'
           installationPath: $(Agent.ToolsDirectory)/dotnet
 
+      - script: |
+          echo "##vso[task.setvariable variable=DOTNET_ROOT]$(Agent.ToolsDirectory)/dotnet"
+          echo "##vso[task.setvariable variable=PATH]$(Agent.ToolsDirectory)/dotnet;$(PATH)"
+        displayName: "Set DOTNET_ROOT"
+
       - script: dotnet --info
         displayName: "Check .NET SDK Version"
 
-      - task: NuGetAuthenticate@1
-        displayName: "Authenticate to Azure Artifacts"
+      # Restore
+      - task: DotNetCoreCLI@2
+        displayName: "Restore"
+        inputs:
+          command: 'restore'
+          projects: '$(projectSolution)'
 
-      # Install SonarScanner as global tool
-      - script: dotnet tool install --global dotnet-sonarscanner
-        displayName: "Install SonarScanner for .NET"
+      # SonarCloud Prepare (FIXED service connection name)
+     
+      - task: SonarCloudPrepare@3
+        inputs:
+          SonarCloud: 'sonarcube'
+          organization: 'hrisikeshkumar'
+          scannerMode: 'dotnet'
+          projectKey: 'hrisikeshkumar_itassetshq'
+          projectName: 'ITAssetsHQ'
 
-      # Run SonarScanner Begin + Build + End
-      - script: |
-          dotnet sonarscanner begin \
-            /o:"hrisikeshkumar" \
-            /k:"hrisikeshkumar_itassetshq" \
-            /d:sonar.token="$(sonar_token)" \
-            /d:sonar.host.url="https://sonarcloud.io"
 
-          dotnet restore $(projectSolution)
+      # Build
+      - task: DotNetCoreCLI@2
+        displayName: "Build"
+        inputs:
+          command: 'build'
+          projects: '$(projectSolution)'
+          arguments: '--configuration $(buildConfiguration)'
 
-          dotnet build $(projectSolution) --configuration $(buildConfiguration)
+      # Test
+      - task: DotNetCoreCLI@2
+        displayName: "Run Unit Tests"
+        inputs:
+          command: 'test'
+          projects: '**/*Tests.csproj'
+          arguments: '--configuration $(buildConfiguration) --no-build --logger trx --results-directory $(Build.SourcesDirectory)/TestResults'
 
-          dotnet test **/*Tests.csproj --configuration $(buildConfiguration) --no-build --logger trx --results-directory $(Build.SourcesDirectory)/TestResults
-
-          dotnet sonarscanner end /d:sonar.token="$(sonar_token)"
-        displayName: "Run SonarScanner with Build & Test"
-        env:
-          SONAR_TOKEN: $(sonar_token)   # stored as secret variable in Azure DevOps
-
-      # Publish Unit Test Results
+      # Publish Test Results
       - task: PublishTestResults@2
         displayName: "Publish Unit Test Results"
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: 'VSTest'
-          testResultsFiles: 'TestResults/*.trx'
+          testResultsFiles: '**/TestResults/*.trx'
           searchFolder: '$(Build.SourcesDirectory)/TestResults'
           failTaskOnFailedTests: false
 
+      # SonarCloud Analyze & Publish
+      - task: SonarCloudAnalyze@3
+
+      - task: SonarCloudPublish@3
+        inputs:
+          pollingTimeoutSec: '1200'   # wait longer (20 minutes)
+
+
+
 # ------------------------------
-# 2. Package
+# 2. Package & Publish Artifacts
 # ------------------------------
 - stage: Package
   displayName: "Package & Publish"
@@ -88,6 +111,14 @@ stages:
           version: '9.0.x'
           installationPath: $(Agent.ToolsDirectory)/dotnet
 
+      - script: |
+          echo "##vso[task.setvariable variable=DOTNET_ROOT]$(Agent.ToolsDirectory)/dotnet"
+          echo "##vso[task.setvariable variable=PATH]$(Agent.ToolsDirectory)/dotnet;$(PATH)"
+        displayName: "Set DOTNET_ROOT"
+
+      - script: dotnet --info
+        displayName: "Check .NET SDK Version"
+
       - task: DotNetCoreCLI@2
         displayName: "Publish"
         inputs:
@@ -95,6 +126,7 @@ stages:
           projects: '$(projectSolution)'
           arguments: '--configuration $(buildConfiguration) --output $(publishDir)'
 
+      # Archive publish output into a ZIP (for deployment)
       - task: ArchiveFiles@2
         displayName: "Archive Published Files"
         inputs:
@@ -110,8 +142,9 @@ stages:
           artifactName: 'drop'
           publishLocation: 'Container'
 
+
 # ------------------------------
-# 3. Deploy to Azure (Staging)
+# 3. Deploy to Azure (staging)
 # ------------------------------
 - stage: Deploy
   displayName: "Deploy to Azure App Service"
@@ -131,6 +164,6 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Deploy to Azure WebApp (Staging)'
               inputs:
-                azureSubscription: 'Azure'
+                azureSubscription: 'Azure'   # 👈 must match your Azure service connection
                 appName: 'rajaicsi'
                 package: '$(Pipeline.Workspace)/drop/app.zip'
