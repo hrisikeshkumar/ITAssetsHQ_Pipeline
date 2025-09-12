@@ -7,7 +7,7 @@ pool: Laptop
 
 variables: 
   buildConfiguration: 'Release'
-  projectSolution: '**/IT_Hardware.sln'
+  projectSolution: '**/**IT_Hardware.sln'
   publishDir: '$(Build.ArtifactStagingDirectory)/publish'
   sonar_token: '2b84c2f32aab5010d71ad47dd9d15ca5e04a33be'
 
