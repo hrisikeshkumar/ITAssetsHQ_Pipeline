@@ -48,6 +48,8 @@ stages:
             /d:sonar.token="$(sonar_token)" \
             /d:sonar.host.url="https://sonarcloud.io"
 
+          dotnet restore $(projectSolution)
+
           dotnet build $(projectSolution) --configuration $(buildConfiguration)
 
           dotnet test **/*Tests.csproj --configuration $(buildConfiguration) --no-build --logger trx --results-directory $(Build.SourcesDirectory)/TestResults
