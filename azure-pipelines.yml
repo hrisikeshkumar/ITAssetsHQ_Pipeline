@@ -50,10 +50,10 @@ stages:
      
       - task: SonarCloudPrepare@3
         inputs:
-          SonarCloud: 'sonarcube'
-          organization: 'hrisikeshkumar'
+          SonarCloud: 'DevopsSonar'
+          organization: 'hrisikesh-kumar'
           scannerMode: 'dotnet'
-          projectKey: 'hrisikeshkumar_itassetshq'
+          projectKey: 'hrisikesh-kumar_ITAssetHQ'
           projectName: 'ITAssetsHQ'
 
 
