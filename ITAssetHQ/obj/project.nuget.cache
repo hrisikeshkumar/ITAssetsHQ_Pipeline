@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MBjfs1nnJu8=",
+  "dgSpecHash": "laBWBkBtFr4=",
   "success": true,
-  "projectFilePath": "E:\\ICSI Projects\\ITAssetsHQ\\NUnitTest\\NUnitTest.csproj",
+  "projectFilePath": "E:\\ICSI Projects\\ITAssetsHQ\\ITAssetHQ\\IT_Hardware.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin_pc\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
@@ -12,7 +12,6 @@
     "C:\\Users\\admin_pc\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\closedxml\\0.105.0\\closedxml.0.105.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\closedxml.parser\\2.0.0\\closedxml.parser.2.0.0.nupkg.sha512",
-    "C:\\Users\\admin_pc\\.nuget\\packages\\coverlet.collector\\6.0.4\\coverlet.collector.6.0.4.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\documentformat.openxml\\3.1.1\\documentformat.openxml.3.1.1.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\documentformat.openxml.framework\\3.1.1\\documentformat.openxml.framework.3.1.1.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",
@@ -165,7 +164,6 @@
     "C:\\Users\\admin_pc\\.nuget\\packages\\nuget.protocol\\6.11.0\\nuget.protocol.6.11.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\nuget.versioning\\6.11.0\\nuget.versioning.6.11.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\nunit\\4.4.0\\nunit.4.4.0.nupkg.sha512",
-    "C:\\Users\\admin_pc\\.nuget\\packages\\nunit.analyzers\\4.10.0\\nunit.analyzers.4.10.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\nunit3testadapter\\5.1.0\\nunit3testadapter.5.1.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\qrcoder\\1.6.0\\qrcoder.1.6.0.nupkg.sha512",
     "C:\\Users\\admin_pc\\.nuget\\packages\\rbush.signed\\4.0.0\\rbush.signed.4.0.0.nupkg.sha512",

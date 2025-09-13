@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NUnitTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c02e69e9dd6e3d22775073f84c95bc918fd29af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f79decabc971afb37b1a57d37df5c5968ff1e9a2")]
 [assembly: System.Reflection.AssemblyProductAttribute("NUnitTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NUnitTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
